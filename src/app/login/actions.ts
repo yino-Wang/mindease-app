@@ -42,7 +42,7 @@ export async function signIn(
     await ensureUser(data.user);
   }
 
-  redirect(next ?? "/timer");
+  redirect(next ?? "/dashboard");
 }
 
 export async function signUp(
@@ -79,7 +79,7 @@ export async function signUp(
   }
 
   if (data.session) {
-    redirect(next ?? "/timer");
+    redirect(next ?? "/dashboard");
   }
 
   return {

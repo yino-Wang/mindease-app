@@ -1,5 +1,6 @@
 "use client";
 
+import { useRouter } from "next/navigation";
 import { useCallback, useEffect, useState } from "react";
 import { HomeDashboard } from "@/components/home/HomeDashboard";
 import { SplashScreen } from "@/components/ui/SplashScreen";
@@ -9,6 +10,7 @@ type HomeEntranceProps = {
 };
 
 export function HomeEntrance({ isAuthenticated }: HomeEntranceProps) {
+  const router = useRouter();
   const [showSplash, setShowSplash] = useState(true);
   const [splashMounted, setSplashMounted] = useState(true);
 
@@ -18,7 +20,10 @@ export function HomeEntrance({ isAuthenticated }: HomeEntranceProps) {
 
   const handleExitComplete = useCallback(() => {
     setSplashMounted(false);
-  }, []);
+    if (isAuthenticated) {
+      router.push("/dashboard");
+    }
+  }, [isAuthenticated, router]);
 
   useEffect(() => {
     if (!splashMounted) return;
@@ -33,7 +38,7 @@ export function HomeEntrance({ isAuthenticated }: HomeEntranceProps) {
 
   return (
     <>
-      <HomeDashboard isAuthenticated={isAuthenticated} />
+      {!isAuthenticated && <HomeDashboard isAuthenticated={false} />}
       {splashMounted && (
         <SplashScreen
           show={showSplash}

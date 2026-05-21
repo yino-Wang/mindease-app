@@ -9,7 +9,7 @@ export const createMeditationLogSchema = z.object({
     .int()
     .min(1, "Duration must be at least 1 second")
     .max(7200, "Duration cannot exceed 2 hours"),
-  logType: z.literal("TIMER"),
+  logType: z.enum(["TIMER", "COURSE"]),
 });
 
 export const createZenJournalSchema = z.object({

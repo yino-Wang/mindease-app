@@ -1,7 +1,14 @@
 import { type NextRequest, NextResponse } from "next/server";
 import { updateSession } from "@/lib/supabase/middleware";
 
-const PROTECTED_PREFIXES = ["/timer", "/journal"];
+const PROTECTED_PREFIXES = [
+  "/timer",
+  "/journal",
+  "/courses",
+  "/daily",
+  "/dashboard",
+  "/profile",
+];
 
 function isProtectedPath(pathname: string) {
   return PROTECTED_PREFIXES.some(
@@ -21,7 +28,7 @@ export async function middleware(request: NextRequest) {
   }
 
   if (pathname === "/login" && user) {
-    const next = request.nextUrl.searchParams.get("next") ?? "/timer";
+    const next = request.nextUrl.searchParams.get("next") ?? "/dashboard";
     return NextResponse.redirect(new URL(next, request.url));
   }
 
@@ -30,8 +37,18 @@ export async function middleware(request: NextRequest) {
 
 export const config = {
   matcher: [
+    "/timer",
     "/timer/:path*",
+    "/journal",
     "/journal/:path*",
+    "/courses",
+    "/courses/:path*",
+    "/daily",
+    "/daily/:path*",
+    "/dashboard",
+    "/dashboard/:path*",
+    "/profile",
+    "/profile/:path*",
     "/login",
   ],
 };
