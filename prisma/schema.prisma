@@ -1,0 +1,105 @@
+// MindEase — PRD-derived schema (Supabase PostgreSQL)
+
+datasource db {
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL") // Full Supabase connection pooler support
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+// 1. User table (ID mapped to Supabase Auth)
+model User {
+  id             String               @id @default(uuid())
+  email          String               @unique
+  createdAt      DateTime             @default(now())
+  updatedAt      DateTime             @updatedAt
+  logs           UserMeditationLog[]
+  courseProgress UserCourseProgress[]
+
+  @@map("users")
+}
+
+// 2. Media audio/video table (system soundscapes and course audio)
+model MeditationAudio {
+  id         String              @id @default(uuid())
+  name       String
+  url        String // Supabase Storage CDN URL
+  bgVideoUrl String? // Muted loop background video URL (PRD Appendix A.2)
+  category   String // "nature", "zen", "course", "daily"
+  duration   Int? // Preset audio duration in seconds; nullable for free timer
+  createdAt  DateTime            @default(now())
+  logs       UserMeditationLog[]
+  courseStep CourseStep? // If course audio, reverse relation to course step
+
+  @@map("meditation_audios")
+}
+
+// 3. Structured course and step tables (3-day course gating)
+model Course {
+  id          String               @id @default(uuid())
+  title       String
+  description String
+  createdAt   DateTime             @default(now())
+  steps       CourseStep[]
+  progresses  UserCourseProgress[]
+
+  @@map("courses")
+}
+
+model CourseStep {
+  id          String          @id @default(uuid())
+  courseId    String
+  course      Course          @relation(fields: [courseId], references: [id], onDelete: Cascade)
+  audioId     String          @unique
+  audio       MeditationAudio @relation(fields: [audioId], references: [id])
+  daySequence Int // e.g. Day 1 = 1, Day 2 = 2
+  title       String // e.g. "Awakening Breath"
+  createdAt   DateTime        @default(now())
+
+  @@unique([courseId, daySequence]) // Unique day sequence per course
+  @@map("course_steps")
+}
+
+// 4. User course progress (prerequisite unlock gating)
+model UserCourseProgress {
+  id              String   @id @default(uuid())
+  userId          String
+  user            User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  courseId        String
+  course          Course   @relation(fields: [courseId], references: [id], onDelete: Cascade)
+  currentSequence Int      @default(1) // Current unlocked day sequence for this course
+  updatedAt       DateTime @updatedAt
+
+  @@unique([userId, courseId])
+  @@map("user_course_progresses")
+}
+
+// 5. Meditation log (powers energy glow calendar)
+model UserMeditationLog {
+  id        String           @id @default(uuid())
+  userId    String
+  user      User             @relation(fields: [userId], references: [id], onDelete: Cascade)
+  audioId   String? // Nullable for free timer or AI-generated sessions
+  audio     MeditationAudio? @relation(fields: [audioId], references: [id], onDelete: SetNull)
+  duration  Int // Actual meditation duration in seconds
+  logType   String // "TIMER" (free timer), "COURSE" (micro-course), "AI" (AI guide)
+  aiScript  String? // When logType is AI, persist LLM-generated meditation script text
+  createdAt DateTime         @default(now())
+  journal   UserJournal?
+
+  @@map("user_meditation_logs")
+}
+
+// 6. Zen journal (strict character limit)
+model UserJournal {
+  id        String            @id @default(uuid())
+  logId     String            @unique
+  log       UserMeditationLog @relation(fields: [logId], references: [id], onDelete: Cascade)
+  content   String // Enforce 50-character max in app or DB validation
+  createdAt DateTime          @default(now())
+
+  @@map("user_journals")
+}
