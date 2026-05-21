@@ -31,8 +31,12 @@ export function MadeForYouSection({
         role="list"
         aria-label="Recommended for you"
       >
-        {items.map((item) => (
-          <MadeForYouCard key={item.id} item={item} />
+        {items.map((item, index) => (
+          <MadeForYouCard
+            key={item.id}
+            item={item}
+            coverIndex={index % 3}
+          />
         ))}
       </div>
     </section>

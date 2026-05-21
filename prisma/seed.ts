@@ -36,7 +36,7 @@ const COURSE_STEPS = [
     daySequence: 1,
     title: "Day 1: Breath Awareness",
     audioName: "Day 1 — Vocal Guide",
-    guideFile: "ambient/1.mp3",
+    guideFile: "ambient/1.jpg",
     loopFile: null,
   },
   {

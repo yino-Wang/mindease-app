@@ -31,8 +31,12 @@ export function VideoSpotlightSection({
     <section className="w-full" aria-label="Video spotlight">
       <SectionHeader title="Video Spotlight" seeAllHref={seeAllHref} />
       <div className={CAROUSEL_ROW} role="list" aria-label="Spotlight videos">
-        {items.map((item) => (
-          <SpotlightVideoCard key={item.id} item={item} />
+        {items.map((item, index) => (
+          <SpotlightVideoCard
+            key={item.id}
+            item={item}
+            coverIndex={index % 3}
+          />
         ))}
       </div>
     </section>

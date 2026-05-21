@@ -1,12 +1,11 @@
 "use client";
 
 import Link from "next/link";
-import { SafeAmbientVideo } from "@/components/media/SafeAmbientVideo";
+import { DashboardCardCover } from "@/components/dashboard/cards/DashboardCardCover";
 import {
   CARD_BORDER_ALT,
   CARD_CAROUSEL_WIDTH,
   CARD_HOVER_GLOW,
-  CARD_MEDIA_ASPECT,
   CARD_RADIUS_LG,
   CARD_SURFACE,
   FOCUS_RING,
@@ -15,14 +14,17 @@ import type { MadeForYouItem } from "@/lib/dashboard/types";
 
 type MadeForYouCardProps = {
   item: MadeForYouItem;
+  coverIndex: number;
 };
 
 function CardBody({
   item,
   isLocked,
+  coverIndex,
 }: {
   item: MadeForYouItem;
   isLocked: boolean;
+  coverIndex: number;
 }) {
   return (
     <article
@@ -32,17 +34,12 @@ function CardBody({
           : `${CARD_BORDER_ALT} ${CARD_HOVER_GLOW} hover:sacred-glow-subtle`
       }`}
     >
-      <div className={`relative overflow-hidden ${CARD_MEDIA_ASPECT}`}>
-        {item.videoUrl && !isLocked ? (
-          <SafeAmbientVideo
-            src={item.videoUrl}
-            autoPlay
-            className="h-full w-full object-cover"
-          />
-        ) : (
-          <div className="h-full w-full bg-gradient-to-br from-stone-800/50 via-stone-900/80 to-stone-950" />
-        )}
-      </div>
+      <DashboardCardCover
+        coverIndex={coverIndex}
+        alt={item.title}
+        videoUrl={item.videoUrl}
+        showVideo={!isLocked}
+      />
       <div className="border-t border-stone-800/40 px-4 py-3.5">
         <p className="text-[10px] tracking-widest text-stone-500 uppercase">
           {item.subtitle}
@@ -55,7 +52,7 @@ function CardBody({
   );
 }
 
-export function MadeForYouCard({ item }: MadeForYouCardProps) {
+export function MadeForYouCard({ item, coverIndex }: MadeForYouCardProps) {
   const isLocked = item.subtitle === "Locked";
 
   if (isLocked) {
@@ -64,7 +61,7 @@ export function MadeForYouCard({ item }: MadeForYouCardProps) {
         className={`snap-start ${CARD_CAROUSEL_WIDTH}`}
         aria-label={`${item.title}, locked`}
       >
-        <CardBody item={item} isLocked />
+        <CardBody item={item} isLocked={true} coverIndex={coverIndex} />
       </div>
     );
   }
@@ -72,10 +69,10 @@ export function MadeForYouCard({ item }: MadeForYouCardProps) {
   return (
     <Link
       href={item.href}
-      className={`snap-start ${CARD_CAROUSEL_WIDTH} ${FOCUS_RING}`}
+      className={`group snap-start ${CARD_CAROUSEL_WIDTH} ${FOCUS_RING}`}
       aria-label={item.title}
     >
-      <CardBody item={item} isLocked={false} />
+      <CardBody item={item} isLocked={false} coverIndex={coverIndex} />
     </Link>
   );
 }

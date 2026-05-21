@@ -1,10 +1,9 @@
 import Link from "next/link";
-import { SafeAmbientVideo } from "@/components/media/SafeAmbientVideo";
+import { DashboardCardCover } from "@/components/dashboard/cards/DashboardCardCover";
 import {
   CARD_BORDER,
   CARD_CAROUSEL_WIDTH,
   CARD_HOVER_GLOW,
-  CARD_MEDIA_ASPECT,
   CARD_RADIUS_SM,
   CARD_SURFACE,
   FOCUS_RING,
@@ -13,9 +12,13 @@ import type { SpotlightItem } from "@/lib/dashboard/types";
 
 type SpotlightVideoCardProps = {
   item: SpotlightItem;
+  coverIndex: number;
 };
 
-export function SpotlightVideoCard({ item }: SpotlightVideoCardProps) {
+export function SpotlightVideoCard({
+  item,
+  coverIndex,
+}: SpotlightVideoCardProps) {
   return (
     <Link
       href={item.href}
@@ -25,17 +28,12 @@ export function SpotlightVideoCard({ item }: SpotlightVideoCardProps) {
       <article
         className={`flex flex-col overflow-hidden ${CARD_RADIUS_SM} ${CARD_SURFACE} ${CARD_BORDER} ${CARD_HOVER_GLOW} group-hover:sacred-glow-subtle`}
       >
-        <div className={`relative overflow-hidden ${CARD_MEDIA_ASPECT}`}>
-          {item.videoUrl ? (
-            <SafeAmbientVideo
-              src={item.videoUrl}
-              autoPlay
-              className="h-full w-full object-cover opacity-90 transition-opacity duration-700 group-hover:opacity-100 motion-reduce:transition-none"
-            />
-          ) : (
-            <div className="h-full w-full bg-gradient-to-br from-stone-800/60 via-stone-900/80 to-stone-950" />
-          )}
-        </div>
+        <DashboardCardCover
+          coverIndex={coverIndex}
+          alt={`${item.title}, ${item.subtitle}`}
+          videoUrl={item.videoUrl}
+          priority={coverIndex === 0}
+        />
         <div className="border-t border-stone-800/40 px-4 py-3.5">
           <p className="text-[10px] tracking-widest text-stone-500 uppercase">
             {item.subtitle}
