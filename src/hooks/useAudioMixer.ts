@@ -55,11 +55,11 @@ export function useAudioMixer() {
       gainsRef.current.clear();
       volumesRef.current.clear();
 
-      await Promise.all(
+      const results = await Promise.allSettled(
         tracks.map(async (track) => {
           const response = await fetch(track.url);
           if (!response.ok) {
-            throw new Error(`Failed to load ${track.name}`);
+            throw new Error(`Failed to load ${track.name} (${response.status})`);
           }
           const arrayBuffer = await response.arrayBuffer();
           const audioBuffer = await ctx.decodeAudioData(arrayBuffer);
@@ -72,6 +72,21 @@ export function useAudioMixer() {
           volumesRef.current.set(track.id, 0);
         })
       );
+
+      const failed = results.filter((r) => r.status === "rejected");
+      if (buffersRef.current.size === 0) {
+        const detail =
+          failed[0]?.status === "rejected"
+            ? String(failed[0].reason)
+            : "No tracks loaded";
+        throw new Error(detail);
+      }
+
+      if (failed.length > 0) {
+        console.warn(
+          `[useAudioMixer] ${failed.length} track(s) failed to load`
+        );
+      }
 
       setIsReady(true);
     } catch (e) {
