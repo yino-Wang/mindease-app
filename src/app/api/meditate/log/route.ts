@@ -1,11 +1,14 @@
 import { NextRequest, NextResponse } from "next/server";
-import { UnauthorizedError, getSessionUserId } from "@/lib/auth/session";
+import { getAuthUser, UnauthorizedError } from "@/lib/auth/session";
+import { ensureUser } from "@/lib/auth/ensure-user";
 import { prisma } from "@/lib/prisma";
 import { createMeditationLogSchema } from "@/lib/validation/meditate";
 
 export async function POST(request: NextRequest) {
   try {
-    const userId = getSessionUserId(request);
+    const authUser = await getAuthUser();
+    await ensureUser({ id: authUser.id, email: authUser.email });
+
     const body = await request.json();
     const parsed = createMeditationLogSchema.safeParse(body);
 
@@ -30,17 +33,9 @@ export async function POST(request: NextRequest) {
       }
     }
 
-    const user = await prisma.user.findUnique({ where: { id: userId } });
-    if (!user) {
-      return NextResponse.json(
-        { error: "User not found. Ensure DEV_USER_ID exists in users table." },
-        { status: 404 }
-      );
-    }
-
     const log = await prisma.userMeditationLog.create({
       data: {
-        userId,
+        userId: authUser.id,
         audioId: audioId ?? null,
         duration,
         logType,

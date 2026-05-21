@@ -27,3 +27,10 @@ body {
     0 0 40px rgb(245 158 11 / 0.15),
     0 0 80px rgb(245 158 11 / 0.08);
 }
+
+.sacred-glow:focus,
+.sacred-glow:focus-visible {
+  box-shadow:
+    0 0 40px rgb(245 158 11 / 0.25),
+    0 0 80px rgb(245 158 11 / 0.12);
+}

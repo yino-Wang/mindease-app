@@ -1,4 +1,4 @@
-import { NextRequest } from "next/server";
+import { createClient } from "@/lib/supabase/server";
 
 export class UnauthorizedError extends Error {
   constructor(message = "Unauthorized") {
@@ -7,20 +7,24 @@ export class UnauthorizedError extends Error {
   }
 }
 
-/**
- * Resolves the authenticated user id for meditate APIs.
- * Phase B: dev header when ENABLE_DEV_AUTH=true.
- * Phase C: Supabase JWT verification (placeholder).
- */
-export function getSessionUserId(request: NextRequest): string {
-  const devAuthEnabled = process.env.ENABLE_DEV_AUTH === "true";
+export type AuthUser = {
+  id: string;
+  email: string;
+};
 
-  if (devAuthEnabled) {
-    const devUserId =
-      request.headers.get("x-dev-user-id") ?? process.env.DEV_USER_ID;
-    if (devUserId) return devUserId;
+export async function getAuthUser(): Promise<AuthUser> {
+  const supabase = await createClient();
+  const {
+    data: { user },
+    error,
+  } = await supabase.auth.getUser();
+
+  if (error || !user?.email) {
+    throw new UnauthorizedError();
   }
 
-  // TODO Phase C: verify Supabase session cookie / Bearer JWT
-  throw new UnauthorizedError();
+  return {
+    id: user.id,
+    email: user.email,
+  };
 }

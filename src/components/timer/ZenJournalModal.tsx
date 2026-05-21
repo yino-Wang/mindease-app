@@ -2,7 +2,6 @@
 
 import { AnimatePresence, motion } from "framer-motion";
 import { useState } from "react";
-import { getMeditateHeaders } from "@/lib/api/meditate-headers";
 import { ZEN_JOURNAL_MAX_LENGTH } from "@/lib/validation/meditate";
 
 type ZenJournalModalProps = {
@@ -36,7 +35,8 @@ export function ZenJournalModal({ logId, open, onClose }: ZenJournalModalProps) 
     try {
       const res = await fetch("/api/meditate/journal", {
         method: "POST",
-        headers: getMeditateHeaders(),
+        headers: { "Content-Type": "application/json" },
+        credentials: "include",
         body: JSON.stringify({ logId, content: trimmed }),
       });
 

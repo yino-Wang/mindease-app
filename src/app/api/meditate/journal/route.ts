@@ -1,11 +1,11 @@
 import { NextRequest, NextResponse } from "next/server";
-import { UnauthorizedError, getSessionUserId } from "@/lib/auth/session";
+import { getAuthUser, UnauthorizedError } from "@/lib/auth/session";
 import { prisma } from "@/lib/prisma";
 import { createZenJournalSchema } from "@/lib/validation/meditate";
 
 export async function POST(request: NextRequest) {
   try {
-    const userId = getSessionUserId(request);
+    const authUser = await getAuthUser();
     const body = await request.json();
     const parsed = createZenJournalSchema.safeParse(body);
 
@@ -23,7 +23,7 @@ export async function POST(request: NextRequest) {
       include: { journal: true },
     });
 
-    if (!log || log.userId !== userId) {
+    if (!log || log.userId !== authUser.id) {
       return NextResponse.json(
         { error: "Meditation log not found" },
         { status: 404 }

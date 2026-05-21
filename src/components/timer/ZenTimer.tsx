@@ -8,7 +8,6 @@ import { SoundscapePanel } from "@/components/timer/SoundscapePanel";
 import { TimerChrome } from "@/components/timer/TimerChrome";
 import { TimerControls } from "@/components/timer/TimerControls";
 import { ZenJournalModal } from "@/components/timer/ZenJournalModal";
-import { getMeditateHeaders } from "@/lib/api/meditate-headers";
 import { useAudioMixer, type AmbientTrack } from "@/hooks/useAudioMixer";
 import { useChime } from "@/hooks/useChime";
 import { useZenTimer } from "@/hooks/useZenTimer";
@@ -46,7 +45,8 @@ export function ZenTimer() {
     try {
       const res = await fetch("/api/meditate/log", {
         method: "POST",
-        headers: getMeditateHeaders(),
+        headers: { "Content-Type": "application/json" },
+        credentials: "include",
         body: JSON.stringify({
           audioId: primaryAudioId,
           duration: elapsed,
@@ -164,6 +164,12 @@ export function ZenTimer() {
         >
           MindEase
         </Link>
+        <a
+          href="/auth/signout"
+          className="text-xs tracking-widest text-stone-500 uppercase transition-colors duration-700 hover:text-stone-300"
+        >
+          Sign out
+        </a>
       </header>
 
       <main className="relative z-10 flex flex-1 flex-col items-center justify-center gap-8 py-24">
