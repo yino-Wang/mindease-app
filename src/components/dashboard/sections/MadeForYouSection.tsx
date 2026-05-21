@@ -1,0 +1,40 @@
+import { MadeForYouCard } from "@/components/dashboard/cards/MadeForYouCard";
+import { SectionHeader } from "@/components/dashboard/SectionHeader";
+import type { MadeForYouItem } from "@/lib/dashboard/types";
+
+type MadeForYouSectionProps = {
+  items: MadeForYouItem[];
+  seeAllHref?: string;
+};
+
+export function MadeForYouSection({
+  items,
+  seeAllHref = "/courses",
+}: MadeForYouSectionProps) {
+  if (items.length === 0) {
+    return (
+      <section className="w-full" aria-label="Made for you">
+        <SectionHeader title="Made For You" seeAllHref={seeAllHref} />
+        <p className="text-sm tracking-wide text-stone-600">
+          Personalized recommendations will appear as you begin your journey.
+        </p>
+      </section>
+    );
+  }
+
+  return (
+    <section className="w-full" aria-label="Made for you">
+      <SectionHeader title="Made For You" seeAllHref={seeAllHref} />
+      <div
+        className="scrollbar-hide -mx-1 flex snap-x snap-mandatory gap-6 overflow-x-auto px-1 pb-4"
+        role="list"
+        aria-label="Recommended for you"
+        tabIndex={0}
+      >
+        {items.map((item) => (
+          <MadeForYouCard key={item.id} item={item} />
+        ))}
+      </div>
+    </section>
+  );
+}
