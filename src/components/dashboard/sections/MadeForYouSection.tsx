@@ -1,5 +1,6 @@
 import { MadeForYouCard } from "@/components/dashboard/cards/MadeForYouCard";
 import { SectionHeader } from "@/components/dashboard/SectionHeader";
+import { CAROUSEL_ROW } from "@/lib/dashboard/styles";
 import type { MadeForYouItem } from "@/lib/dashboard/types";
 
 type MadeForYouSectionProps = {
@@ -26,10 +27,9 @@ export function MadeForYouSection({
     <section className="w-full" aria-label="Made for you">
       <SectionHeader title="Made For You" seeAllHref={seeAllHref} />
       <div
-        className="scrollbar-hide -mx-1 flex snap-x snap-mandatory gap-6 overflow-x-auto px-1 pb-4"
+        className={CAROUSEL_ROW}
         role="list"
         aria-label="Recommended for you"
-        tabIndex={0}
       >
         {items.map((item) => (
           <MadeForYouCard key={item.id} item={item} />

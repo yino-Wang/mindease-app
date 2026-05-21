@@ -1,5 +1,6 @@
 import { SpotlightVideoCard } from "@/components/dashboard/cards/SpotlightVideoCard";
 import { SectionHeader } from "@/components/dashboard/SectionHeader";
+import { CAROUSEL_ROW } from "@/lib/dashboard/styles";
 import type { SpotlightItem } from "@/lib/dashboard/types";
 
 type VideoSpotlightSectionProps = {
@@ -29,12 +30,7 @@ export function VideoSpotlightSection({
   return (
     <section className="w-full" aria-label="Video spotlight">
       <SectionHeader title="Video Spotlight" seeAllHref={seeAllHref} />
-      <div
-        className="scrollbar-hide -mx-1 flex snap-x snap-mandatory gap-6 overflow-x-auto px-1 pb-4"
-        role="list"
-        aria-label="Spotlight videos"
-        tabIndex={0}
-      >
+      <div className={CAROUSEL_ROW} role="list" aria-label="Spotlight videos">
         {items.map((item) => (
           <SpotlightVideoCard key={item.id} item={item} />
         ))}

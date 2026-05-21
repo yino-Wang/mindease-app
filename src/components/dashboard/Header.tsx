@@ -18,45 +18,58 @@ function getInitials(email: string | null | undefined): string {
   return part.slice(0, 2).toUpperCase();
 }
 
-function NavLinks({
-  pathname,
-  className,
+function NavItem({
+  item,
+  active,
 }: {
-  pathname: string;
-  className?: string;
+  item: (typeof DASHBOARD_NAV_ITEMS)[number];
+  active: boolean;
 }) {
+  if (item.disabled || !item.href) {
+    return (
+      <span
+        className="cursor-not-allowed text-xs font-semibold tracking-widest text-stone-500 uppercase opacity-40"
+        aria-disabled="true"
+      >
+        {item.label}
+      </span>
+    );
+  }
+
   return (
-    <nav className={className} aria-label="Main modules">
-      {DASHBOARD_NAV_ITEMS.map((item) => {
-        const active = isNavItemActive(item, pathname);
+    <Link
+      href={item.href}
+      className={`group relative flex flex-col items-center px-1 pb-2 transition-colors duration-500 ease-in-out motion-reduce:transition-none ${FOCUS_RING} ${
+        active ? "text-amber-400" : "text-stone-500 hover:text-stone-200"
+      }`}
+      aria-current={active ? "page" : undefined}
+    >
+      <span className="text-xs font-semibold tracking-widest uppercase">
+        {item.label}
+      </span>
+      {active && (
+        <span
+          className="absolute right-0 -bottom-0.5 left-0 h-0.5 rounded-full bg-amber-400 shadow-[0_0_14px_rgb(245_158_11/0.55)]"
+          aria-hidden
+        />
+      )}
+    </Link>
+  );
+}
 
-        if (item.disabled || !item.href) {
-          return (
-            <span
-              key={item.id}
-              className="cursor-not-allowed border-b border-transparent pb-1 text-xs tracking-widest text-stone-500 uppercase opacity-40"
-              aria-disabled="true"
-            >
-              {item.label}
-            </span>
-          );
-        }
-
-        return (
-          <Link
-            key={item.id}
-            href={item.href}
-            className={`border-b pb-1 text-xs tracking-widest uppercase transition-all duration-700 ease-in-out motion-reduce:transition-none ${FOCUS_RING} ${
-              active
-                ? "border-amber-500/50 text-amber-400/90"
-                : "border-transparent text-stone-500 hover:text-stone-300"
-            }`}
-            aria-current={active ? "page" : undefined}
-          >
-            {item.label}
-          </Link>
-        );
-      })}
+function DesktopNav({ pathname }: { pathname: string }) {
+  return (
+    <nav
+      className="flex items-center justify-center gap-10 lg:gap-14"
+      aria-label="Main modules"
+    >
+      {DASHBOARD_NAV_ITEMS.map((item) => (
+        <NavItem
+          key={item.id}
+          item={item}
+          active={isNavItemActive(item, pathname)}
+        />
+      ))}
     </nav>
   );
 }
@@ -65,37 +78,59 @@ export function DashboardHeader({ userEmail }: DashboardHeaderProps) {
   const pathname = usePathname();
 
   return (
-    <header className="fixed top-0 left-0 z-50 w-full border-b border-stone-900/60 bg-[#0D0E0E]/80 bg-background/80 backdrop-blur-md">
-      <div className="flex items-center justify-between px-8 py-4">
-        <div className="flex flex-1 items-center justify-start">
+    <header className="fixed top-0 left-0 z-50 w-full border-b border-stone-900/60 bg-[#0D0E0E]/80 backdrop-blur-xl">
+      <div className="hidden w-full grid-cols-3 items-center px-12 py-6 md:grid">
+        <div className="flex items-center justify-start">
           <Link
             href="/dashboard"
-            className={`font-serif text-lg tracking-wide text-stone-200 transition-colors duration-700 hover:text-stone-100 ${FOCUS_RING}`}
+            className={`font-serif text-xl font-semibold tracking-[0.15em] transition-opacity duration-700 hover:opacity-90 ${FOCUS_RING}`}
           >
-            MindEase
+            <span className="bg-gradient-to-r from-stone-100 via-amber-200 to-amber-400 bg-clip-text text-transparent">
+              MindEase
+            </span>
           </Link>
         </div>
 
-        <div className="hidden flex-1 justify-center md:flex">
-          <NavLinks pathname={pathname} className="flex items-center gap-8" />
+        <div className="flex justify-center">
+          <DesktopNav pathname={pathname} />
         </div>
 
-        <div className="flex flex-1 items-center justify-end">
+        <div className="flex items-center justify-end">
           <Link
             href="/profile"
-            className={`sacred-glow flex h-9 w-9 items-center justify-center rounded-full border border-amber-500/30 bg-stone-900/40 text-xs tracking-widest text-amber-400/80 backdrop-blur-md transition-all duration-700 ease-in-out hover:border-amber-500/50 hover:text-amber-300 ${FOCUS_RING}`}
+            className={`rounded-full border border-stone-800/80 p-[2px] transition-all duration-700 hover:border-amber-500/40 ${FOCUS_RING}`}
             aria-label="Profile"
           >
-            {getInitials(userEmail)}
+            <span className="sacred-glow flex h-10 w-10 items-center justify-center rounded-full bg-stone-900/60 text-xs font-semibold tracking-widest text-amber-400/90 backdrop-blur-md">
+              {getInitials(userEmail)}
+            </span>
           </Link>
         </div>
       </div>
 
-      <div className="border-t border-stone-900/60 px-8 py-2 md:hidden">
-        <NavLinks
-          pathname={pathname}
-          className="scrollbar-hide flex items-center justify-center gap-5 overflow-x-auto"
-        />
+      <div className="flex w-full flex-col gap-3 px-6 py-4 md:hidden">
+        <div className="flex items-center justify-between">
+          <Link
+            href="/dashboard"
+            className={`font-serif text-lg font-semibold tracking-[0.12em] ${FOCUS_RING}`}
+          >
+            <span className="bg-gradient-to-r from-stone-100 via-amber-200 to-amber-400 bg-clip-text text-transparent">
+              MindEase
+            </span>
+          </Link>
+          <Link
+            href="/profile"
+            className={`rounded-full border border-stone-800/80 p-[2px] ${FOCUS_RING}`}
+            aria-label="Profile"
+          >
+            <span className="flex h-9 w-9 items-center justify-center rounded-full bg-stone-900/60 text-xs text-amber-400/90">
+              {getInitials(userEmail)}
+            </span>
+          </Link>
+        </div>
+        <div className="scrollbar-hide overflow-x-auto border-t border-stone-900/50 pt-3">
+          <DesktopNav pathname={pathname} />
+        </div>
       </div>
     </header>
   );

@@ -16,7 +16,7 @@ export default async function ProfilePage() {
   return (
     <>
       <DashboardHeader userEmail={user.email} />
-      <main className="mx-auto flex min-h-[60vh] max-w-lg flex-col items-center justify-center gap-8 px-6 pt-32 pb-16 text-center">
+      <main className="flex min-h-[60vh] w-full max-w-lg flex-col items-center justify-center gap-8 px-6 pt-36 pb-16 text-center lg:mx-auto lg:pt-32">
         <h1 className="font-serif text-3xl tracking-wide text-stone-200">
           Profile
         </h1>
