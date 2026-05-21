@@ -4,6 +4,7 @@ import {
 } from "@/lib/courses/queries";
 import { getTodayDailyZen } from "@/lib/daily-zen/resolve";
 import { resolvePlayableVideoUrl } from "@/lib/media/resolve-playable-url";
+import { getZenCalendarData } from "@/lib/zen-calendar/aggregate";
 import type {
   DashboardContent,
   MadeForYouItem,
@@ -23,10 +24,11 @@ function stripDayPrefix(title: string): string {
 export async function getDashboardContent(
   userId: string
 ): Promise<DashboardContent> {
-  const [course, catalog, daily] = await Promise.all([
+  const [course, catalog, daily, zenCalendar] = await Promise.all([
     getFoundationCourse(),
     getCourseCatalog(userId),
     getTodayDailyZen(),
+    getZenCalendarData(userId),
   ]);
 
   const courseId = course?.id ?? null;
@@ -96,6 +98,7 @@ export async function getDashboardContent(
     spotlight,
     topPick,
     madeForYou: madeForYou.slice(0, 6),
+    zenCalendar,
     courseId,
   };
 }

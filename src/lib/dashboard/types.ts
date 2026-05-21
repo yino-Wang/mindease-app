@@ -23,9 +23,12 @@ export type MadeForYouItem = {
   href: string;
 };
 
+import type { ZenCalendarData } from "@/lib/zen-calendar/types";
+
 export type DashboardContent = {
   spotlight: SpotlightItem[];
   topPick: TopPickItem | null;
   madeForYou: MadeForYouItem[];
+  zenCalendar: ZenCalendarData;
   courseId: string | null;
 };

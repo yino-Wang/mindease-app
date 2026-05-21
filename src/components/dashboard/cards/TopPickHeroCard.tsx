@@ -11,19 +11,27 @@ import type { TopPickItem } from "@/lib/dashboard/types";
 
 type TopPickHeroCardProps = {
   item: TopPickItem;
+  layout?: "default" | "split";
 };
 
-export function TopPickHeroCard({ item }: TopPickHeroCardProps) {
+export function TopPickHeroCard({
+  item,
+  layout = "default",
+}: TopPickHeroCardProps) {
+  const isSplit = layout === "split";
+
   return (
     <Link
       href={item.href}
-      className={`group block w-full ${FOCUS_RING}`}
+      className={`group block w-full ${isSplit ? "flex h-full min-h-0 flex-1 flex-col" : ""} ${FOCUS_RING}`}
       aria-label={`${item.title}, featured practice`}
     >
       <article
-        className={`flex w-full flex-col overflow-hidden ${CARD_RADIUS_LG} ${CARD_SURFACE} ${CARD_BORDER} transition-opacity duration-700 ease-in-out motion-reduce:transition-none group-hover:opacity-95`}
+        className={`flex w-full flex-col overflow-hidden ${CARD_RADIUS_LG} ${CARD_SURFACE} ${CARD_BORDER} transition-opacity duration-700 ease-in-out motion-reduce:transition-none group-hover:opacity-95 ${isSplit ? "h-full min-h-0 flex-1" : ""}`}
       >
-        <div className={`relative overflow-hidden ${CARD_MEDIA_ASPECT}`}>
+        <div
+          className={`relative overflow-hidden ${isSplit ? "min-h-[200px] flex-1" : CARD_MEDIA_ASPECT}`}
+        >
           {item.videoUrl ? (
             <SafeAmbientVideo
               src={item.videoUrl}

@@ -3,7 +3,7 @@ import { DashboardHeader } from "@/components/dashboard/Header";
 import { DashboardViewport } from "@/components/dashboard/DashboardViewport";
 import { SacredQuoteBanner } from "@/components/dashboard/SacredQuoteBanner";
 import { MadeForYouSection } from "@/components/dashboard/sections/MadeForYouSection";
-import { TopPickSection } from "@/components/dashboard/sections/TopPickSection";
+import { TopTierSplitSection } from "@/components/dashboard/sections/TopTierSplitSection";
 import { VideoSpotlightSection } from "@/components/dashboard/sections/VideoSpotlightSection";
 import { ensureUser } from "@/lib/auth/ensure-user";
 import { getDashboardContent } from "@/lib/dashboard/queries";
@@ -25,13 +25,16 @@ export default async function DashboardPage() {
 
   return (
     <DashboardViewport header={<DashboardHeader userEmail={user.email} />}>
+      <TopTierSplitSection
+        topPick={content.topPick}
+        zenCalendar={content.zenCalendar}
+      />
       <VideoSpotlightSection
         items={content.spotlight}
         seeAllHref="/courses"
       />
-      <TopPickSection item={content.topPick} />
-      <SacredQuoteBanner />
       <MadeForYouSection items={content.madeForYou} seeAllHref="/courses" />
+      <SacredQuoteBanner />
     </DashboardViewport>
   );
 }

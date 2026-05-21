@@ -5,7 +5,7 @@ export const DASHBOARD_SHELL =
 
 /** Full-bleed main canvas — no max-width constraint */
 export const DASHBOARD_MAIN =
-  "w-full space-y-14 px-6 pt-36 pb-24 sm:px-10 lg:px-12 lg:pt-32";
+  "w-full space-y-16 px-6 pt-36 pb-24 sm:px-10 lg:px-12 lg:pt-32";
 
 export const CARD_SURFACE = "bg-stone-900/40 backdrop-blur-md";
 
