@@ -50,3 +50,12 @@ MindEase is an immersive meditation Web App focused on a minimalist zen aestheti
 ## Appendix A: MVP Static Asset Specification
 * **A.1 Ambient Audio**: Sourced from Pixabay/Freesound (CC0). Uploaded to Supabase Storage bucket `meditation-assets`. Wired via `prisma/seed.ts`.
 * **A.2 Course Materials**: 10-30s nature loops from Pexels Video (rendered via HTML5 `<video autoplay loop muted playsinline>`). Vocal guidance pre-baked via TTS and stored in Supabase.
+
+## Git Commit Workflow (Strictly Enforced)
+1. You must work in "Plan Mode" for any feature implementation. Split the task into tiny, atomic sub-steps.
+2. Every time you successfully complete a sub-step or an atomic UI/backend block (e.g., creating a static layout, setting up an API route), you MUST pause and instruct the user to make a Git commit.
+3. Provide the exact, structured conventional commit message for the user. Do not proceed to the next step until the user confirms.
+4. Example format to output:
+   "👉 [STEP COMPLETED] Please run the following commands in your terminal before we proceed:
+   git add .
+   git commit -m 'feat(timer): init static countdown layout'"
