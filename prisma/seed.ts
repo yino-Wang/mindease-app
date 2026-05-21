@@ -151,10 +151,28 @@ async function seedCourse(): Promise<"created" | "skipped"> {
   return "created";
 }
 
+async function seedDevUser(): Promise<void> {
+  const devUserId = process.env.DEV_USER_ID;
+  if (!devUserId) return;
+
+  await prisma.user.upsert({
+    where: { id: devUserId },
+    create: {
+      id: devUserId,
+      email: "dev@mindease.local",
+    },
+    update: {},
+  });
+  console.log(`  dev user: ${devUserId}`);
+}
+
 async function main() {
   console.log("Seeding MindEase MVP data...\n");
 
-  console.log("Ambient tracks (Zen Timer):");
+  console.log("Dev user (if DEV_USER_ID set):");
+  await seedDevUser();
+
+  console.log("\nAmbient tracks (Zen Timer):");
   const ambient = await seedAmbientTracks();
 
   console.log("\nStructured course:");
