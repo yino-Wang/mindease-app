@@ -111,6 +111,129 @@ const DAILY_ZEN_THEMES = [
   },
 ] as const;
 
+const SPOTLIGHT_ITEMS = [
+  {
+    title: "Powerful Message For You",
+    description:
+      "A premium guided masterclass on grounding breath and quiet confidence. Settle into the body, soften the jaw, and let the day recede.",
+    author: "MindEase Guide",
+    coverUrl: "/cover/1.jpg",
+    videoFile: "ambient/deep-ocean.mp3",
+    duration: 720,
+    rating: 4.9,
+    playCount: 12400,
+    sortOrder: 0,
+    tags: ["Empowerment", "Breath", "Focus"],
+  },
+  {
+    title: "Forest Threshold",
+    description:
+      "Walk the tree line at dawn. Layered forest ambience supports a steady attention anchor without visual noise.",
+    author: "Sora Lin",
+    coverUrl: "/cover/2.jpg",
+    videoFile: "ambient/forest-rain.mp3",
+    duration: 600,
+    rating: 4.8,
+    playCount: 9800,
+    sortOrder: 1,
+    tags: ["Nature", "Calm", "Morning"],
+  },
+  {
+    title: "Desert Stillness",
+    description:
+      "Wide horizons and slow breath. A cinematic stillness practice for resetting nervous system load after dense work.",
+    author: "MindEase Studio",
+    coverUrl: "/cover/3.jpg",
+    videoFile: "ambient/singing-bowl-spectrum.mp3",
+    duration: 540,
+    rating: 4.85,
+    playCount: 7600,
+    sortOrder: 2,
+    tags: ["Stillness", "Release", "Evening"],
+  },
+] as const;
+
+const MADE_FOR_YOU_ITEMS = [
+  {
+    title: "Five-Minute Ocean Reset",
+    description:
+      "A tailored short loop for mid-day anxiety—gentle waves, no instruction, just arrive and exhale.",
+    author: "For you",
+    coverUrl: "/cover/2.jpg",
+    videoFile: "ambient/deep-ocean.mp3",
+    duration: 300,
+    rating: 4.7,
+    playCount: 4200,
+    sortOrder: 0,
+    tags: ["Short", "Ocean", "Reset"],
+  },
+  {
+    title: "Rain on Cedar",
+    description:
+      "Soft rainfall texture for focus sprints. Keeps peripheral attention occupied so the mind can narrow.",
+    author: "For you",
+    coverUrl: "/cover/1.jpg",
+    videoFile: "ambient/forest-rain.mp3",
+    duration: 360,
+    rating: 4.75,
+    playCount: 3100,
+    sortOrder: 1,
+    tags: ["Rain", "Focus", "Loop"],
+  },
+  {
+    title: "Bowl Spectrum Drift",
+    description:
+      "Singing bowl harmonics in a slow arc—ideal before sleep or after screen-heavy evenings.",
+    author: "For you",
+    coverUrl: "/cover/3.jpg",
+    videoFile: "ambient/singing-bowl-spectrum.mp3",
+    duration: 420,
+    rating: 4.8,
+    playCount: 2800,
+    sortOrder: 2,
+    tags: ["Sleep", "Bowl", "Drift"],
+  },
+  {
+    title: "Pink Noise Shelter",
+    description:
+      "Steady pink noise bed for masking urban sound. Minimal guidance, maximum enclosure.",
+    author: "For you",
+    coverUrl: "/cover/1.jpg",
+    videoFile: "ambient/pink-noise.mp3",
+    duration: 480,
+    rating: 4.6,
+    playCount: 1900,
+    sortOrder: 3,
+    tags: ["Noise", "Shelter", "Night"],
+  },
+  {
+    title: "Sunday Stillness Loop",
+    description:
+      "A made-for-you extension of the weekly stillness theme—unhurried, low pulse, room to breathe.",
+    author: "For you",
+    coverUrl: "/cover/2.jpg",
+    videoFile: "ambient/forest-rain.mp3",
+    duration: 300,
+    rating: 4.72,
+    playCount: 1500,
+    sortOrder: 4,
+    tags: ["Sunday", "Stillness"],
+  },
+  {
+    title: "Late Night Grounding",
+    description:
+      "Ocean undertow and long exhale cues—built for insomnia edges and racing thought loops.",
+    author: "For you",
+    coverUrl: "/cover/3.jpg",
+    videoFile: "ambient/deep-ocean.mp3",
+    duration: 360,
+    rating: 4.78,
+    playCount: 2200,
+    sortOrder: 5,
+    tags: ["Night", "Grounding"],
+  },
+] as const;
+
 function resolveProjectRef(): string {
   const supabaseUrl =
     process.env.SUPABASE_URL ?? process.env.NEXT_PUBLIC_SUPABASE_URL;
@@ -312,6 +435,72 @@ async function seedDailyZen(): Promise<{ created: number; updated: number }> {
   return { created, updated };
 }
 
+async function seedStreamingItems(): Promise<{
+  spotlight: number;
+  madeForYou: number;
+}> {
+  let spotlight = 0;
+  let madeForYou = 0;
+
+  for (const item of SPOTLIGHT_ITEMS) {
+    const existing = await prisma.streamingItem.findFirst({
+      where: { sectionType: "SPOTLIGHT", title: item.title },
+    });
+    const data = {
+      sectionType: "SPOTLIGHT",
+      title: item.title,
+      description: item.description,
+      videoUrl: assetUrl(item.videoFile),
+      coverUrl: item.coverUrl,
+      duration: item.duration,
+      rating: item.rating,
+      playCount: item.playCount,
+      author: item.author,
+      tags: item.tags.join(","),
+      sortOrder: item.sortOrder,
+      published: true,
+    };
+    if (existing) {
+      await prisma.streamingItem.update({ where: { id: existing.id }, data });
+      console.log(`  update spotlight: ${item.title}`);
+    } else {
+      await prisma.streamingItem.create({ data });
+      console.log(`  create spotlight: ${item.title}`);
+      spotlight++;
+    }
+  }
+
+  for (const item of MADE_FOR_YOU_ITEMS) {
+    const existing = await prisma.streamingItem.findFirst({
+      where: { sectionType: "MADE_FOR_YOU", title: item.title },
+    });
+    const data = {
+      sectionType: "MADE_FOR_YOU",
+      title: item.title,
+      description: item.description,
+      videoUrl: assetUrl(item.videoFile),
+      coverUrl: item.coverUrl,
+      duration: item.duration,
+      rating: item.rating,
+      playCount: item.playCount,
+      author: item.author,
+      tags: item.tags.join(","),
+      sortOrder: item.sortOrder,
+      published: true,
+    };
+    if (existing) {
+      await prisma.streamingItem.update({ where: { id: existing.id }, data });
+      console.log(`  update made for you: ${item.title}`);
+    } else {
+      await prisma.streamingItem.create({ data });
+      console.log(`  create made for you: ${item.title}`);
+      madeForYou++;
+    }
+  }
+
+  return { spotlight, madeForYou };
+}
+
 async function main() {
   console.log("Seeding MindEase MVP data...\n");
 
@@ -324,6 +513,9 @@ async function main() {
   console.log("\nDaily Zen themes:");
   const daily = await seedDailyZen();
 
+  console.log("\nStreaming catalog (Spotlight + Made For You):");
+  const streaming = await seedStreamingItems();
+
   console.log("\nDone.");
   console.log(
     `  Ambient: ${ambient.created} created, ${ambient.updated} updated`
@@ -331,6 +523,9 @@ async function main() {
   console.log(`  Course: ${course}`);
   console.log(
     `  Daily Zen: ${daily.created} created, ${daily.updated} updated`
+  );
+  console.log(
+    `  Streaming: ${streaming.spotlight} spotlight created, ${streaming.madeForYou} made-for-you created`
   );
 }
 

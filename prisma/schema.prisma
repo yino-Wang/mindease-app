@@ -93,7 +93,28 @@ model UserMeditationLog {
   @@map("user_meditation_logs")
 }
 
-// 6. Zen journal (strict character limit)
+// 6. Dashboard streaming catalog (Video Spotlight + Made For You)
+model StreamingItem {
+  id          String   @id @default(uuid())
+  sectionType String // "SPOTLIGHT" | "MADE_FOR_YOU"
+  title       String
+  description String   @db.Text
+  videoUrl    String // Supabase Storage CDN URL (mp4 loop or audio guide)
+  coverUrl    String // Public path e.g. /cover/1.jpg
+  duration    Int // seconds
+  rating      Float    @default(4.8)
+  playCount   Int      @default(0)
+  author      String?
+  tags        String   @default("") // Comma-separated display tags
+  sortOrder   Int      @default(0)
+  published   Boolean  @default(true)
+  createdAt   DateTime @default(now())
+
+  @@index([sectionType, sortOrder])
+  @@map("streaming_items")
+}
+
+// 7. Zen journal (strict character limit)
 model UserJournal {
   id        String            @id @default(uuid())
   logId     String            @unique
