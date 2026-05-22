@@ -2,7 +2,10 @@ import { type NextRequest, NextResponse } from "next/server";
 import { updateSession } from "@/lib/supabase/middleware";
 
 const PROTECTED_PREFIXES = [
-  "/timer",
+  "/mixer",
+  "/mornings",
+  "/sleep",
+  "/zen-timer",
   "/journal",
   "/courses",
   "/daily",
@@ -32,13 +35,25 @@ export async function middleware(request: NextRequest) {
     return NextResponse.redirect(new URL(next, request.url));
   }
 
+  if (pathname === "/timer" || pathname.startsWith("/timer/")) {
+    const url = request.nextUrl.clone();
+    url.pathname = pathname.replace(/^\/timer/, "/zen-timer");
+    return NextResponse.redirect(url);
+  }
+
   return response;
 }
 
 export const config = {
   matcher: [
-    "/timer",
-    "/timer/:path*",
+    "/mixer",
+    "/mixer/:path*",
+    "/mornings",
+    "/mornings/:path*",
+    "/sleep",
+    "/sleep/:path*",
+    "/zen-timer",
+    "/zen-timer/:path*",
     "/journal",
     "/journal/:path*",
     "/courses",

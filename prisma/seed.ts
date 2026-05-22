@@ -111,6 +111,174 @@ const DAILY_ZEN_THEMES = [
   },
 ] as const;
 
+const CATEGORY_LIBRARY_SEED = [
+  {
+    name: "Ocean Rain Layer",
+    category: "MIXER",
+    introduction:
+      "Wave undertones meet rainfall in a slow stereo weave. Blend layers until the mind feels docked beside a night sea.",
+    coverUrl: "/images/covers/mixer-1.jpg",
+    url: "https://www.youtube.com/watch?v=ZToicYcHIOU",
+    duration: 3600,
+    author: "MindEase",
+    sortOrder: 1,
+  },
+  {
+    name: "Forest Bowl Spectrum",
+    category: "MIXER",
+    introduction:
+      "Singing bowls shimmer over distant birdsong. Tune the mix until metal and moss share the same breath.",
+    coverUrl: "/images/covers/mixer-2.jpg",
+    url: "https://www.youtube.com/watch?v=vj0JDwQLof4",
+    duration: 2700,
+    author: "MindEase",
+    sortOrder: 2,
+  },
+  {
+    name: "Pink Haze Drone",
+    category: "MIXER",
+    introduction:
+      "Pink noise cushions thought without stealing attention. Let the drone hold you while finer sounds float above.",
+    coverUrl: "/images/covers/mixer-3.jpg",
+    url: "https://www.youtube.com/watch?v=lVx3mFxML80",
+    duration: 2400,
+    author: "MindEase",
+    sortOrder: 3,
+  },
+  {
+    name: "Ember Wind Chimes",
+    category: "MIXER",
+    introduction:
+      "Chimes answer a low wind bed like sparks in dark air. Balance brightness and depth until the room feels warmer.",
+    coverUrl: "/images/covers/mixer-4.jpg",
+    url: "https://www.youtube.com/watch?v=TPC_36ZHOjo",
+    duration: 3300,
+    author: "MindEase",
+    sortOrder: 4,
+  },
+  {
+    name: "Deep Current Loop",
+    category: "MIXER",
+    introduction:
+      "Sub-bass currents roll beneath a velvet surface. Mix for headphones and feel the body rocked in safe, slow motion.",
+    coverUrl: "/images/covers/mixer-5.jpg",
+    url: "https://www.youtube.com/watch?v=d4S4twjeWTs",
+    duration: 4200,
+    author: "MindEase",
+    sortOrder: 5,
+  },
+  {
+    name: "Sunrise Gratitude Gate",
+    category: "MORNINGS",
+    introduction:
+      "Greet the first light with palms open and shoulders soft. Name one blessing before the day rushes in.",
+    coverUrl: "/images/covers/mornings-1.jpg",
+    url: "https://www.youtube.com/watch?v=aEqlQvczMJQ",
+    duration: 720,
+    author: "MindEase",
+    sortOrder: 1,
+  },
+  {
+    name: "Golden Breath Awakening",
+    category: "MORNINGS",
+    introduction:
+      "Draw golden air through the ribs and pour it slowly out. Wake the body as if light were pouring inward.",
+    coverUrl: "/images/covers/mornings-2.jpg",
+    url: "https://www.youtube.com/watch?v=TR11LU9ziCU",
+    duration: 600,
+    author: "MindEase",
+    sortOrder: 2,
+  },
+  {
+    name: "Dawn Intention Walk",
+    category: "MORNINGS",
+    introduction:
+      "Walk inward before your feet touch the street. Set one intention the heart can carry past breakfast.",
+    coverUrl: "/images/covers/mornings-3.jpg",
+    url: "https://www.youtube.com/watch?v=FGO8IWiusJo",
+    duration: 840,
+    author: "MindEase",
+    sortOrder: 3,
+  },
+  {
+    name: "Soft Horizon Open",
+    category: "MORNINGS",
+    introduction:
+      "Expand the chest toward a horizon only you can see. Let morning be spacious, not something to conquer.",
+    coverUrl: "/images/covers/mornings-4.jpg",
+    url: "https://www.youtube.com/watch?v=vtOAnC73xtk",
+    duration: 900,
+    author: "MindEase",
+    sortOrder: 4,
+  },
+  {
+    name: "First Light Body Scan",
+    category: "MORNINGS",
+    introduction:
+      "Scan from crown to soles while the room brightens. Notice warmth gathering where sleep once held you.",
+    coverUrl: "/images/covers/mornings-5.jpg",
+    url: "https://www.youtube.com/watch?v=5Uf_o_8AasI",
+    duration: 1080,
+    author: "MindEase",
+    sortOrder: 5,
+  },
+  {
+    name: "Moonlit Release",
+    category: "SLEEP",
+    introduction:
+      "Exhale the day like smoke into a cool night sky. Each breath lengthens until eyelids feel weighted with kindness.",
+    coverUrl: "/images/covers/sleep-1.jpg",
+    url: "https://www.youtube.com/watch?v=18Z_mX0O-lA",
+    duration: 1500,
+    author: "MindEase",
+    sortOrder: 1,
+  },
+  {
+    name: "Starfield Descent",
+    category: "SLEEP",
+    introduction:
+      "Imagine falling gently through stars that never rush. The mind drifts downward while the body stays anchored in bed.",
+    coverUrl: "/images/covers/sleep-2.jpg",
+    url: "https://www.youtube.com/watch?v=ZTo7qF26xV0",
+    duration: 1800,
+    author: "MindEase",
+    sortOrder: 2,
+  },
+  {
+    name: "Tidal Lullaby",
+    category: "SLEEP",
+    introduction:
+      "Far waves rise and fall in a rhythm older than worry. Match your breath to the tide until thought thins to foam.",
+    coverUrl: "/images/covers/sleep-3.jpg",
+    url: "https://www.youtube.com/watch?v=28Psc_n6LCE",
+    duration: 2100,
+    author: "MindEase",
+    sortOrder: 3,
+  },
+  {
+    name: "Velvet Night Garden",
+    category: "SLEEP",
+    introduction:
+      "Walk a dream garden where petals glow without sound. Rest here until sleep gathers you like dew.",
+    coverUrl: "/images/covers/sleep-4.jpg",
+    url: "https://www.youtube.com/watch?v=6Xp3O8w8a0Y",
+    duration: 2400,
+    author: "MindEase",
+    sortOrder: 4,
+  },
+  {
+    name: "Deep Rest Bell",
+    category: "SLEEP",
+    introduction:
+      "A distant bell tells the body it is safe to power down. Let the final tone dissolve into darkness behind the eyes.",
+    coverUrl: "/images/covers/sleep-5.jpg",
+    url: "https://www.youtube.com/watch?v=ZToicYcHIOU",
+    duration: 2700,
+    author: "MindEase",
+    sortOrder: 5,
+  },
+] as const;
+
 const SPOTLIGHT_ITEMS = [
   {
     title: "Daily Calm",
@@ -443,6 +611,56 @@ async function seedDailyZen(): Promise<{ created: number; updated: number }> {
   return { created, updated };
 }
 
+async function seedCategoryLibrary(): Promise<{
+  created: number;
+  updated: number;
+  removed: number;
+}> {
+  let created = 0;
+  let updated = 0;
+
+  const legacyTimer = await prisma.meditationAudio.deleteMany({
+    where: { category: "TIMER" },
+  });
+  if (legacyTimer.count > 0) {
+    console.log(`  remove legacy TIMER library: ${legacyTimer.count} rows`);
+  }
+
+  for (const item of CATEGORY_LIBRARY_SEED) {
+    const existing = await prisma.meditationAudio.findFirst({
+      where: { name: item.name, category: item.category },
+    });
+
+    const data = {
+      name: item.name,
+      url: item.url,
+      bgVideoUrl: null,
+      category: item.category,
+      introduction: item.introduction,
+      coverUrl: item.coverUrl,
+      author: item.author,
+      sortOrder: item.sortOrder,
+      published: true,
+      duration: item.duration,
+    };
+
+    if (existing) {
+      await prisma.meditationAudio.update({
+        where: { id: existing.id },
+        data,
+      });
+      console.log(`  update library [${item.category}]: ${item.name}`);
+      updated++;
+    } else {
+      await prisma.meditationAudio.create({ data });
+      console.log(`  create library [${item.category}]: ${item.name}`);
+      created++;
+    }
+  }
+
+  return { created, updated, removed: legacyTimer.count };
+}
+
 async function seedStreamingItems(): Promise<{
   spotlight: number;
   madeForYou: number;
@@ -521,6 +739,9 @@ async function main() {
   console.log("\nDaily Zen themes:");
   const daily = await seedDailyZen();
 
+  console.log("\nCategory libraries (MIXER / MORNINGS / SLEEP):");
+  const library = await seedCategoryLibrary();
+
   console.log("\nStreaming catalog (Spotlight + Made For You):");
   const streaming = await seedStreamingItems();
 
@@ -531,6 +752,9 @@ async function main() {
   console.log(`  Course: ${course}`);
   console.log(
     `  Daily Zen: ${daily.created} created, ${daily.updated} updated`
+  );
+  console.log(
+    `  Category library: ${library.created} created, ${library.updated} updated, ${library.removed} TIMER removed`
   );
   console.log(
     `  Streaming: ${streaming.spotlight} spotlight created, ${streaming.madeForYou} made-for-you created`

@@ -1,7 +1,7 @@
 import { notFound, redirect } from "next/navigation";
 import { CinemaPlayer } from "@/components/streaming/CinemaPlayer";
 import { ensureUser } from "@/lib/auth/ensure-user";
-import { getStreamingItemById } from "@/lib/streaming/queries";
+import { getPlayableMediaById } from "@/lib/media/get-playable-item";
 import { createClient } from "@/lib/supabase/server";
 
 type PageProps = { params: Promise<{ id: string }> };
@@ -20,7 +20,7 @@ export default async function StreamingPlayPage({ params }: PageProps) {
 
   await ensureUser({ id: user.id, email: user.email });
 
-  const item = await getStreamingItemById(id);
+  const item = await getPlayableMediaById(id);
   if (!item) {
     notFound();
   }

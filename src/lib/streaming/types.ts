@@ -1,8 +1,14 @@
-export type StreamingSectionType = "SPOTLIGHT" | "MADE_FOR_YOU";
+import type { LibraryCategory } from "@/lib/meditate/categories";
+
+export type StreamingSectionType =
+  | "SPOTLIGHT"
+  | "MADE_FOR_YOU"
+  | "LIBRARY";
 
 export type StreamingItemRecord = {
   id: string;
   sectionType: StreamingSectionType;
+  libraryCategory?: LibraryCategory;
   title: string;
   description: string;
   videoUrl: string;

@@ -22,18 +22,24 @@ model User {
   @@map("users")
 }
 
-// 2. Media audio/video table (system soundscapes and course audio)
+// 2. Media audio/video table (system soundscapes, course audio, category libraries)
 model MeditationAudio {
-  id         String              @id @default(uuid())
-  name       String
-  url        String // Supabase Storage CDN URL
-  bgVideoUrl String? // Muted loop background video URL (PRD Appendix A.2)
-  category   String // "nature", "zen", "course", "daily"
-  duration   Int? // Preset audio duration in seconds; nullable for free timer
-  createdAt  DateTime            @default(now())
-  logs       UserMeditationLog[]
-  courseStep CourseStep? // If course audio, reverse relation to course step
+  id           String              @id @default(uuid())
+  name         String
+  url          String // Supabase Storage CDN URL or external stream (YouTube)
+  bgVideoUrl   String? // Muted loop background video URL (PRD Appendix A.2)
+  category     String // nature | zen | course | daily | MIXER | MORNINGS | SLEEP
+  introduction String?             @db.Text
+  coverUrl     String?
+  author       String?
+  sortOrder    Int                 @default(0)
+  published    Boolean             @default(true)
+  duration     Int? // Preset audio duration in seconds; nullable for free timer
+  createdAt    DateTime            @default(now())
+  logs         UserMeditationLog[]
+  courseStep   CourseStep? // If course audio, reverse relation to course step
 
+  @@index([category, sortOrder])
   @@map("meditation_audios")
 }
 

@@ -1,34 +1,41 @@
 export type DashboardNavItem = {
   id: string;
   label: string;
-  href?: string;
-  disabled?: boolean;
+  href: string;
   /** Path prefixes that mark this nav item active */
-  activePrefixes?: string[];
+  activePrefixes: string[];
 };
 
 export const DASHBOARD_NAV_ITEMS: DashboardNavItem[] = [
   {
+    id: "dashboard",
+    label: "DASHBOARD",
+    href: "/dashboard",
+    activePrefixes: ["/dashboard"],
+  },
+  {
     id: "timer",
     label: "TIMER",
-    href: "/timer",
-    activePrefixes: ["/timer"],
+    href: "/zen-timer",
+    activePrefixes: ["/zen-timer"],
   },
   {
     id: "mixer",
     label: "MIXER",
-    disabled: true,
+    href: "/mixer",
+    activePrefixes: ["/mixer"],
   },
   {
     id: "mornings",
     label: "MORNINGS",
-    href: "/courses",
-    activePrefixes: ["/courses", "/daily"],
+    href: "/mornings",
+    activePrefixes: ["/mornings"],
   },
   {
     id: "sleep",
     label: "SLEEP",
-    disabled: true,
+    href: "/sleep",
+    activePrefixes: ["/sleep"],
   },
 ];
 
@@ -36,8 +43,10 @@ export function isNavItemActive(
   item: DashboardNavItem,
   pathname: string
 ): boolean {
-  if (!item.activePrefixes?.length) return false;
-  return item.activePrefixes.some(
-    (prefix) => pathname === prefix || pathname.startsWith(`${prefix}/`)
-  );
+  return item.activePrefixes.some((prefix) => {
+    if (prefix === "/dashboard") {
+      return pathname === "/dashboard";
+    }
+    return pathname === prefix || pathname.startsWith(`${prefix}/`);
+  });
 }

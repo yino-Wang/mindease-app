@@ -25,34 +25,29 @@ function NavItem({
   item: (typeof DASHBOARD_NAV_ITEMS)[number];
   active: boolean;
 }) {
-  if (item.disabled || !item.href) {
-    return (
-      <span
-        className="cursor-not-allowed text-xs font-semibold tracking-widest text-stone-500 uppercase opacity-40"
-        aria-disabled="true"
-      >
-        {item.label}
-      </span>
-    );
-  }
+  const tabClass = `group relative flex flex-col items-center px-3 py-1.5 transition-colors duration-500 ease-in-out motion-reduce:transition-none ${FOCUS_RING} ${
+    active
+      ? "rounded border border-amber-500/50 text-amber-400"
+      : "text-stone-500 hover:text-stone-200"
+  }`;
+
+  const underline = active ? (
+    <span
+      className="absolute right-0 -bottom-0.5 left-0 h-0.5 rounded-full bg-amber-400 shadow-[0_0_14px_rgb(245_158_11/0.55)]"
+      aria-hidden
+    />
+  ) : null;
 
   return (
     <Link
       href={item.href}
-      className={`group relative flex flex-col items-center px-1 pb-2 transition-colors duration-500 ease-in-out motion-reduce:transition-none ${FOCUS_RING} ${
-        active ? "text-amber-400" : "text-stone-500 hover:text-stone-200"
-      }`}
+      className={tabClass}
       aria-current={active ? "page" : undefined}
     >
       <span className="text-xs font-semibold tracking-widest uppercase">
         {item.label}
       </span>
-      {active && (
-        <span
-          className="absolute right-0 -bottom-0.5 left-0 h-0.5 rounded-full bg-amber-400 shadow-[0_0_14px_rgb(245_158_11/0.55)]"
-          aria-hidden
-        />
-      )}
+      {underline}
     </Link>
   );
 }
@@ -60,7 +55,7 @@ function NavItem({
 function DesktopNav({ pathname }: { pathname: string }) {
   return (
     <nav
-      className="flex items-center justify-center gap-10 lg:gap-14"
+      className="flex items-center justify-center gap-6 lg:gap-10"
       aria-label="Main modules"
     >
       {DASHBOARD_NAV_ITEMS.map((item) => (

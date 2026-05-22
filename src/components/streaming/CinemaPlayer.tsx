@@ -37,10 +37,10 @@ export function CinemaPlayer({
   const shouldLoop = sectionType === "MADE_FOR_YOU";
 
   useEffect(() => {
-    if (recordedPlay.current) return;
+    if (sectionType === "LIBRARY" || recordedPlay.current) return;
     recordedPlay.current = true;
     void fetch(`/api/streaming/${id}/play`, { method: "POST" });
-  }, [id]);
+  }, [id, sectionType]);
 
   return (
     <div className="relative flex h-full w-full flex-col bg-black">

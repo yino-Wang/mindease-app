@@ -27,7 +27,7 @@ On sign-in / callback, the app upserts `users` with `id` equal to Supabase Auth 
 
 ## Manual test
 
-1. Visit `/timer` while logged out → redirect to `/login`
-2. Sign up → `/timer`
+1. Visit `/zen-timer` while logged out → redirect to `/login`
+2. Sign up → `/zen-timer`
 3. Complete a session → journal modal saves via cookie session
 4. Sign out → `/login`

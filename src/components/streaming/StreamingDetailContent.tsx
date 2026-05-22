@@ -14,7 +14,11 @@ export function StreamingDetailContent({
   durationMinutes,
 }: StreamingDetailContentProps) {
   const sectionLabel =
-    item.sectionType === "SPOTLIGHT" ? "Masterclass" : "Made For You";
+    item.sectionType === "LIBRARY"
+      ? (item.libraryCategory ?? "Library")
+      : item.sectionType === "SPOTLIGHT"
+        ? "Masterclass"
+        : "Made For You";
   const playCountLabel = formatPlayCount(item.playCount);
 
   return (
