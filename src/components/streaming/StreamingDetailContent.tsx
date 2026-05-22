@@ -1,7 +1,8 @@
 import Link from "next/link";
+import { StreamingDetailVisualColumn } from "@/components/streaming/StreamingDetailVisualColumn";
 import { StreamingPlayButton } from "@/components/streaming/StreamingPlayButton";
-import type { StreamingItemRecord } from "@/lib/streaming/types";
 import { formatPlayCount } from "@/lib/streaming/queries";
+import type { StreamingItemRecord } from "@/lib/streaming/types";
 
 type StreamingDetailContentProps = {
   item: StreamingItemRecord;
@@ -17,112 +18,98 @@ export function StreamingDetailContent({
   const playCountLabel = formatPlayCount(item.playCount);
 
   return (
-    <div className="relative z-10 -mt-6 w-full px-5 pb-16 sm:px-10 lg:px-14">
-      <div className="grid w-full gap-10 lg:grid-cols-[minmax(0,1fr)_280px] lg:gap-14">
-        <div className="min-w-0 space-y-8">
-          <p className="text-sm tracking-wide text-stone-500">
-            {item.rating.toFixed(1)}★ · {sectionLabel} · {durationMinutes} min
-          </p>
+    <div className="flex min-h-screen w-full max-w-none flex-col bg-[#0D0E0E]">
+      <header className="flex w-full shrink-0 items-center px-6 py-5 sm:px-10 lg:px-14">
+        <Link
+          href="/dashboard"
+          className="flex h-10 w-10 items-center justify-center rounded-full border border-stone-700/60 bg-stone-900/40 text-stone-300 backdrop-blur-md transition-all duration-700 ease-in-out hover:border-amber-500/30 hover:text-amber-300/90"
+          aria-label="Back to dashboard"
+        >
+          ←
+        </Link>
+      </header>
 
-          <div className="flex flex-wrap items-start justify-between gap-4">
-            <div className="min-w-0 flex-1">
-              <h1 className="font-serif text-3xl leading-tight tracking-wide text-stone-100 sm:text-4xl lg:text-5xl">
-                {item.title}
-              </h1>
-              {item.author ? (
-                <p className="mt-3 text-sm text-stone-500">
-                  By{" "}
-                  <span className="text-stone-400 underline decoration-stone-600 underline-offset-4">
-                    {item.author}
-                  </span>
-                </p>
-              ) : null}
-            </div>
-            <div className="flex shrink-0 gap-2">
-              <button
-                type="button"
-                className="flex h-10 w-10 items-center justify-center rounded-full border border-stone-700/50 bg-stone-900/50 text-stone-500"
-                aria-label="More options"
-              >
-                ⋯
-              </button>
-              <button
-                type="button"
-                className="flex h-10 w-10 items-center justify-center rounded-full border border-stone-700/50 bg-stone-900/50 text-stone-500"
-                aria-label="Save"
-              >
-                ♡
-              </button>
-            </div>
-          </div>
+      <div className="w-full flex-1 px-6 pb-12 sm:px-10 lg:px-14">
+        <div className="grid w-full grid-cols-1 items-start gap-8 lg:grid-cols-2 lg:gap-x-10 lg:gap-y-8 xl:gap-x-14">
+          <StreamingDetailVisualColumn
+            item={item}
+            durationMinutes={durationMinutes}
+          />
 
-          <StreamingPlayButton href={`/dashboard/play/${item.id}`} />
-
-          <button
-            type="button"
-            className="flex w-full max-w-md items-center justify-center gap-2 rounded-full border border-amber-500/25 bg-transparent py-3.5 text-sm tracking-widest text-amber-500/80 uppercase transition-all duration-700 ease-in-out hover:border-amber-500/40 hover:bg-amber-500/5"
-          >
-            Share
-          </button>
-
-          <div className="space-y-4 pt-2">
-            <p className="font-serif text-lg tracking-wide text-stone-300">
-              {playCountLabel} plays
+          <div className="flex min-w-0 w-full flex-col justify-center space-y-8 lg:pl-4 lg:py-4 xl:pl-8">
+            <p className="text-base tracking-wide text-stone-500 lg:text-lg">
+              {item.rating.toFixed(1)}★ · {sectionLabel} · {durationMinutes}{" "}
+              min
             </p>
-            <p className="max-w-2xl text-base leading-relaxed tracking-wide text-stone-400">
-              {item.description}
-            </p>
-          </div>
 
-          {item.tags.length > 0 ? (
-            <div className="flex flex-wrap gap-2 pt-2">
-              {item.tags.map((tag) => (
-                <span
-                  key={tag}
-                  className="rounded-full border border-amber-500/25 px-3 py-1 text-xs tracking-widest text-amber-500/80 uppercase"
+            <div className="flex flex-wrap items-start justify-between gap-4">
+              <div className="min-w-0 flex-1">
+                <h1 className="font-serif text-4xl leading-tight tracking-wide text-stone-100 sm:text-5xl lg:text-[3.25rem]">
+                  {item.title}
+                </h1>
+                {item.author ? (
+                  <p className="mt-4 text-base text-stone-500 lg:text-lg">
+                    By{" "}
+                    <span className="text-stone-400 underline decoration-stone-600 underline-offset-4">
+                      {item.author}
+                    </span>
+                  </p>
+                ) : null}
+              </div>
+              <div className="flex shrink-0 gap-3">
+                <button
+                  type="button"
+                  className="flex h-12 w-12 items-center justify-center rounded-full border border-stone-700/50 bg-stone-900/50 text-lg text-stone-500 transition-all duration-700 ease-in-out hover:border-amber-500/25"
+                  aria-label="More options"
                 >
-                  {tag}
-                </span>
-              ))}
+                  ⋯
+                </button>
+                <button
+                  type="button"
+                  className="flex h-12 w-12 items-center justify-center rounded-full border border-stone-700/50 bg-stone-900/50 text-lg text-stone-500 transition-all duration-700 ease-in-out hover:border-amber-500/25"
+                  aria-label="Save"
+                >
+                  ♡
+                </button>
+              </div>
             </div>
-          ) : null}
-        </div>
 
-        <aside className="space-y-6 border-t border-stone-800/50 pt-8 lg:border-t-0 lg:border-l lg:pt-0 lg:pl-10">
-          <h2 className="text-xs tracking-[0.25em] text-stone-600 uppercase">
-            Session
-          </h2>
-          <dl className="space-y-5 text-sm">
-            <div>
-              <dt className="text-stone-600">Duration</dt>
-              <dd className="mt-1 font-serif text-xl text-stone-200">
-                {durationMinutes} min
-              </dd>
+            <div className="flex flex-col gap-4 sm:flex-row sm:items-stretch">
+              <StreamingPlayButton
+                href={`/dashboard/play/${item.id}`}
+                className="sm:flex-1"
+              />
+              <button
+                type="button"
+                className="flex flex-1 items-center justify-center rounded-full border border-amber-500/25 bg-transparent px-8 py-4 text-base tracking-widest text-amber-500/80 uppercase transition-all duration-700 ease-in-out hover:border-amber-500/40 hover:bg-amber-500/5 motion-reduce:transition-none sm:max-w-[220px] lg:text-lg"
+              >
+                Share
+              </button>
             </div>
-            <div>
-              <dt className="text-stone-600">Rating</dt>
-              <dd className="mt-1 font-serif text-xl text-stone-200">
-                {item.rating.toFixed(1)}★
-              </dd>
+
+            <div className="space-y-5">
+              <p className="font-serif text-xl tracking-wide text-stone-300 lg:text-2xl">
+                {playCountLabel} plays
+              </p>
+              <p className="w-full text-lg leading-relaxed tracking-wide text-stone-400 lg:text-xl">
+                {item.description}
+              </p>
             </div>
-            <div>
-              <dt className="text-stone-600">Total plays</dt>
-              <dd className="mt-1 font-serif text-xl text-stone-200">
-                {playCountLabel}
-              </dd>
-            </div>
-            <div>
-              <dt className="text-stone-600">Format</dt>
-              <dd className="mt-1 text-stone-300">{sectionLabel}</dd>
-            </div>
-          </dl>
-          <Link
-            href="/dashboard"
-            className="inline-block text-xs tracking-widest text-stone-600 uppercase transition-colors duration-700 hover:text-amber-500/80"
-          >
-            ← Back to dashboard
-          </Link>
-        </aside>
+
+            {item.tags.length > 0 ? (
+              <div className="flex flex-wrap gap-3">
+                {item.tags.map((tag) => (
+                  <span
+                    key={tag}
+                    className="rounded-full border border-amber-500/25 px-4 py-1.5 text-sm tracking-widest text-amber-500/80 uppercase"
+                  >
+                    {tag}
+                  </span>
+                ))}
+              </div>
+            ) : null}
+          </div>
+        </div>
       </div>
     </div>
   );

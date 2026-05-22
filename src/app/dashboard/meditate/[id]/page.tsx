@@ -1,6 +1,5 @@
 import { notFound, redirect } from "next/navigation";
 import { StreamingDetailContent } from "@/components/streaming/StreamingDetailContent";
-import { StreamingDetailHero } from "@/components/streaming/StreamingDetailHero";
 import { ensureUser } from "@/lib/auth/ensure-user";
 import { getStreamingItemById } from "@/lib/streaming/queries";
 import { createClient } from "@/lib/supabase/server";
@@ -29,8 +28,7 @@ export default async function StreamingDetailPage({ params }: PageProps) {
   const durationMinutes = Math.max(1, Math.round(item.duration / 60));
 
   return (
-    <main className="flex min-h-screen w-full flex-col">
-      <StreamingDetailHero coverUrl={item.coverUrl} title={item.title} />
+    <main className="min-h-screen w-full max-w-none">
       <StreamingDetailContent item={item} durationMinutes={durationMinutes} />
     </main>
   );

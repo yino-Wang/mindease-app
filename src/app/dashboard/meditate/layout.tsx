@@ -5,7 +5,7 @@ export default function MeditateLayout({
   children: React.ReactNode;
 }) {
   return (
-    <div className="min-h-screen w-full bg-[#0D0E0E] text-stone-300">
+    <div className="min-h-screen w-full max-w-none overflow-x-hidden bg-[#0D0E0E] text-stone-300">
       {children}
     </div>
   );
