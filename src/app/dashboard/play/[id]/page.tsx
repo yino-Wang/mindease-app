@@ -32,6 +32,7 @@ export default async function StreamingPlayPage({ params }: PageProps) {
         title={item.title}
         mediaUrl={item.videoUrl}
         coverUrl={item.coverUrl}
+        sectionType={item.sectionType}
       />
     </main>
   );

@@ -1,6 +1,7 @@
 import Image from "next/image";
 import { SafeAmbientVideo } from "@/components/media/SafeAmbientVideo";
 import { getNatureCover } from "@/lib/dashboard/cover-images";
+import { isYouTubeUrl } from "@/lib/media/is-external-stream";
 import { CARD_MEDIA_ASPECT } from "@/lib/dashboard/styles";
 
 type DashboardCardCoverProps = {
@@ -39,7 +40,7 @@ export function DashboardCardCover({
         className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/50 via-black/10 to-transparent"
         aria-hidden
       />
-      {showVideo && videoUrl ? (
+      {showVideo && videoUrl && !isYouTubeUrl(videoUrl) ? (
         <SafeAmbientVideo
           src={videoUrl}
           autoPlay

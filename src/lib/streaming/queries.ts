@@ -1,5 +1,5 @@
 import { prisma } from "@/lib/prisma";
-import { resolvePlayableGuideUrl } from "@/lib/media/resolve-playable-url";
+import { resolveStreamingMediaUrl } from "@/lib/media/resolve-playable-url";
 import type {
   StreamingCardItem,
   StreamingItemRecord,
@@ -62,7 +62,7 @@ export async function getStreamingItemsBySection(
 
   return Promise.all(
     rows.map(async (row) => {
-      const playable = await resolvePlayableGuideUrl(row.videoUrl).catch(
+      const playable = await resolveStreamingMediaUrl(row.videoUrl).catch(
         () => row.videoUrl
       );
       const durationMinutes = formatDurationMinutes(row.duration);
@@ -93,7 +93,7 @@ export async function getStreamingItemById(
 
   if (!row) return null;
 
-  const videoUrl = await resolvePlayableGuideUrl(row.videoUrl).catch(
+  const videoUrl = await resolveStreamingMediaUrl(row.videoUrl).catch(
     () => row.videoUrl
   );
 

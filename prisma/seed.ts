@@ -113,12 +113,12 @@ const DAILY_ZEN_THEMES = [
 
 const SPOTLIGHT_ITEMS = [
   {
-    title: "Powerful Message For You",
+    title: "Daily Calm",
     description:
-      "A premium guided masterclass on grounding breath and quiet confidence. Settle into the body, soften the jaw, and let the day recede.",
+      "Tamara Levitt guides this 10 minute Daily Calm mindfulness meditation to powerfully restore and re-connect with the present.",
     author: "MindEase Guide",
-    coverUrl: "/cover/1.jpg",
-    videoFile: "ambient/deep-ocean.mp3",
+    coverUrl: "/cover/DailyCalm.png",
+    mediaUrl: "https://www.youtube.com/watch?v=ZToicYcHIOU",
     duration: 720,
     rating: 4.9,
     playCount: 12400,
@@ -126,12 +126,12 @@ const SPOTLIGHT_ITEMS = [
     tags: ["Empowerment", "Breath", "Focus"],
   },
   {
-    title: "Forest Threshold",
+    title: "10-Minute Guided Meditation: Self-Love | SELF",
     description:
-      "Walk the tree line at dawn. Layered forest ambience supports a steady attention anchor without visual noise.",
+      "Daily health, fitness, beauty, style advice, and videos for people who want to achieve their personal best in life.",
     author: "Sora Lin",
-    coverUrl: "/cover/2.jpg",
-    videoFile: "ambient/forest-rain.mp3",
+    coverUrl: "/cover/Self-Love.png",
+    mediaUrl: "https://www.youtube.com/watch?v=vj0JDwQLof4",
     duration: 600,
     rating: 4.8,
     playCount: 9800,
@@ -139,12 +139,12 @@ const SPOTLIGHT_ITEMS = [
     tags: ["Nature", "Calm", "Morning"],
   },
   {
-    title: "Desert Stillness",
+    title: "Mindfulness Meditation",
     description:
       "Wide horizons and slow breath. A cinematic stillness practice for resetting nervous system load after dense work.",
     author: "MindEase Studio",
-    coverUrl: "/cover/3.jpg",
-    videoFile: "ambient/singing-bowl-spectrum.mp3",
+    coverUrl: "/cover/Mindfulness.png",
+    mediaUrl: "https://www.youtube.com/watch?v=lVx3mFxML80",
     duration: 540,
     rating: 4.85,
     playCount: 7600,
@@ -155,12 +155,12 @@ const SPOTLIGHT_ITEMS = [
 
 const MADE_FOR_YOU_ITEMS = [
   {
-    title: "Five-Minute Ocean Reset",
+    title: "20 Minute Guided Meditation For The Heart",
     description:
-      "A tailored short loop for mid-day anxiety—gentle waves, no instruction, just arrive and exhale.",
+      "Listen to this 20 minute guided meditation each day and explore the love and compassion within our hearts to find a state of relaxation and inner peace. ",
     author: "For you",
-    coverUrl: "/cover/2.jpg",
-    videoFile: "ambient/deep-ocean.mp3",
+    coverUrl: "/cover/Heart.png",
+    mediaUrl: "https://www.youtube.com/watch?v=TPC_36ZHOjo",
     duration: 300,
     rating: 4.7,
     playCount: 4200,
@@ -168,12 +168,12 @@ const MADE_FOR_YOU_ITEMS = [
     tags: ["Short", "Ocean", "Reset"],
   },
   {
-    title: "Rain on Cedar",
+    title: "Meditation For Inner Peace",
     description:
-      "Soft rainfall texture for focus sprints. Keeps peripheral attention occupied so the mind can narrow.",
+      "Dive into meditation this Spring, go inward to focus on what feels good in mind and body. Want to have a good body? Tend to the mind. This 10 min practice is a simple meditation that will create the foundation for transformational practice. Compliment your yoga asana practice with this 10 Min Meditation For Inner Peace.",
     author: "For you",
-    coverUrl: "/cover/1.jpg",
-    videoFile: "ambient/forest-rain.mp3",
+    coverUrl: "/cover/Inner Peace.png",
+    mediaUrl: "https://www.youtube.com/watch?v=d4S4twjeWTs",
     duration: 360,
     rating: 4.75,
     playCount: 3100,
@@ -181,12 +181,12 @@ const MADE_FOR_YOU_ITEMS = [
     tags: ["Rain", "Focus", "Loop"],
   },
   {
-    title: "Bowl Spectrum Drift",
+    title: "10-Minute Meditation For Sleep",
     description:
-      "Singing bowl harmonics in a slow arc—ideal before sleep or after screen-heavy evenings.",
+      "If you are feeling restless, listen to this guided meditation to ease your mind and body into falling asleep. ",
     author: "For you",
     coverUrl: "/cover/3.jpg",
-    videoFile: "ambient/singing-bowl-spectrum.mp3",
+    mediaUrl: "https://www.youtube.com/watch?v=aEqlQvczMJQ",
     duration: 420,
     rating: 4.8,
     playCount: 2800,
@@ -194,12 +194,12 @@ const MADE_FOR_YOU_ITEMS = [
     tags: ["Sleep", "Bowl", "Drift"],
   },
   {
-    title: "Pink Noise Shelter",
+    title: "A Guided Meditation on the Body",
     description:
-      "Steady pink noise bed for masking urban sound. Minimal guidance, maximum enclosure.",
+      "A Guided Meditation on the Body, Space, and Awareness with Yongey Mingyur Rinpoche",
     author: "For you",
-    coverUrl: "/cover/1.jpg",
-    videoFile: "ambient/pink-noise.mp3",
+    coverUrl: "/cover/body.png",
+    mediaUrl: "https://www.youtube.com/watch?v=TR11LU9ziCU",
     duration: 480,
     rating: 4.6,
     playCount: 1900,
@@ -207,12 +207,12 @@ const MADE_FOR_YOU_ITEMS = [
     tags: ["Noise", "Shelter", "Night"],
   },
   {
-    title: "Sunday Stillness Loop",
+    title: "Guided Morning Meditation ",
     description:
-      "A made-for-you extension of the weekly stillness theme—unhurried, low pulse, room to breathe.",
+      "This 10 minute mindful meditation will give you the mental clarity and space necessary to ground yourself with beautiful focus and set your day on the perfect track for success and fulfillment. ",
     author: "For you",
-    coverUrl: "/cover/2.jpg",
-    videoFile: "ambient/forest-rain.mp3",
+    coverUrl: "/cover/morning.png",
+    mediaUrl: "https://www.youtube.com/watch?v=FGO8IWiusJo",
     duration: 300,
     rating: 4.72,
     playCount: 1500,
@@ -220,12 +220,12 @@ const MADE_FOR_YOU_ITEMS = [
     tags: ["Sunday", "Stillness"],
   },
   {
-    title: "Late Night Grounding",
+    title: "Powerful Guided Meditation",
     description:
-      "Ocean undertow and long exhale cues—built for insomnia edges and racing thought loops.",
+      "A 10 minute guided meditation for healing, letting go, and inner peace. Heal your heart & emotional wounds with positive energy visualization, energy healing heart chakra tapping, and positive affirmations. This healing meditation will help you cultivate gratitude, self forgiveness, and perspective for your journey. Great for beginners and all levels.",
     author: "For you",
-    coverUrl: "/cover/3.jpg",
-    videoFile: "ambient/deep-ocean.mp3",
+    coverUrl: "/cover/Powerful.png",
+    mediaUrl: "https://www.youtube.com/watch?v=vtOAnC73xtk",
     duration: 360,
     rating: 4.78,
     playCount: 2200,
@@ -264,6 +264,14 @@ function resolveProjectRef(): string {
 function assetUrl(filename: string): string {
   const projectRef = resolveProjectRef();
   return `https://${projectRef}.supabase.co/storage/v1/object/public/${BUCKET}/${filename}`;
+}
+
+/** Pass through YouTube/external URLs; only map bare paths to Supabase Storage. */
+function resolveStreamingMediaUrl(source: string): string {
+  if (/^https?:\/\//i.test(source)) {
+    return source;
+  }
+  return assetUrl(source);
 }
 
 async function seedAmbientTracks(): Promise<{ created: number; updated: number }> {
@@ -450,7 +458,7 @@ async function seedStreamingItems(): Promise<{
       sectionType: "SPOTLIGHT",
       title: item.title,
       description: item.description,
-      videoUrl: assetUrl(item.videoFile),
+      videoUrl: resolveStreamingMediaUrl(item.mediaUrl),
       coverUrl: item.coverUrl,
       duration: item.duration,
       rating: item.rating,
@@ -478,7 +486,7 @@ async function seedStreamingItems(): Promise<{
       sectionType: "MADE_FOR_YOU",
       title: item.title,
       description: item.description,
-      videoUrl: assetUrl(item.videoFile),
+      videoUrl: resolveStreamingMediaUrl(item.mediaUrl),
       coverUrl: item.coverUrl,
       duration: item.duration,
       rating: item.rating,

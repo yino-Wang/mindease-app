@@ -1,18 +1,27 @@
 "use client";
 
+import dynamic from "next/dynamic";
 import Image from "next/image";
 import Link from "next/link";
 import { useEffect, useRef } from "react";
+import {
+  isDirectMediaFile,
+  isYouTubeUrl,
+} from "@/lib/media/is-external-stream";
+import type { StreamingSectionType } from "@/lib/streaming/types";
+
+const ReactPlayer = dynamic(() => import("react-player"), { ssr: false });
 
 type CinemaPlayerProps = {
   id: string;
   title: string;
   mediaUrl: string;
   coverUrl: string;
+  sectionType?: StreamingSectionType;
 };
 
-function isVideoSource(url: string): boolean {
-  return /\.(mp4|webm|ogg|mov)(\?|$)/i.test(url);
+function isAudioSource(url: string): boolean {
+  return /\.(mp3|m4a|wav|ogg)(\?|$)/i.test(url);
 }
 
 export function CinemaPlayer({
@@ -20,8 +29,12 @@ export function CinemaPlayer({
   title,
   mediaUrl,
   coverUrl,
+  sectionType = "SPOTLIGHT",
 }: CinemaPlayerProps) {
   const recordedPlay = useRef(false);
+  const useReactPlayer = isYouTubeUrl(mediaUrl) || isDirectMediaFile(mediaUrl);
+  const useAudio = isAudioSource(mediaUrl);
+  const shouldLoop = sectionType === "MADE_FOR_YOU";
 
   useEffect(() => {
     if (recordedPlay.current) return;
@@ -29,11 +42,9 @@ export function CinemaPlayer({
     void fetch(`/api/streaming/${id}/play`, { method: "POST" });
   }, [id]);
 
-  const useVideo = isVideoSource(mediaUrl);
-
   return (
     <div className="relative flex h-full w-full flex-col bg-black">
-      {!useVideo && (
+      {(useAudio || !useReactPlayer) && (
         <Image
           src={coverUrl}
           alt=""
@@ -44,7 +55,7 @@ export function CinemaPlayer({
         />
       )}
 
-      <div className="absolute top-0 right-0 left-0 z-10 flex items-center justify-between p-5 sm:p-8">
+      <div className="absolute top-0 right-0 left-0 z-20 flex items-center justify-between p-5 sm:p-8">
         <Link
           href={`/dashboard/meditate/${id}`}
           className="flex h-10 w-10 items-center justify-center rounded-full border border-stone-700/60 bg-black/50 text-stone-300 backdrop-blur-md transition-all duration-700 hover:border-amber-500/30"
@@ -57,23 +68,33 @@ export function CinemaPlayer({
         </p>
       </div>
 
-      <div className="relative z-10 flex flex-1 items-center justify-center p-4 pt-20">
-        {useVideo ? (
-          <video
-            src={mediaUrl}
-            controls
-            playsInline
-            autoPlay
-            className="max-h-full max-w-full object-contain"
-            aria-label={`Playing ${title}`}
-          />
+      <div className="absolute inset-0 top-16 z-10 flex items-center justify-center p-4">
+        {useReactPlayer && !useAudio ? (
+          <div className="aspect-video h-full max-h-full w-full max-w-full [&_video]:object-contain">
+            <ReactPlayer
+              src={mediaUrl}
+              playing
+              controls
+              playsInline
+              loop={shouldLoop}
+              width="100%"
+              height="100%"
+              config={{
+                youtube: {
+                  rel: 0,
+                  iv_load_policy: 3,
+                },
+              }}
+            />
+          </div>
         ) : (
           <audio
             src={mediaUrl}
             controls
             playsInline
             autoPlay
-            className="w-full max-w-lg"
+            loop={shouldLoop}
+            className="relative z-10 w-full max-w-lg"
             aria-label={`Playing ${title}`}
           />
         )}

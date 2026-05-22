@@ -1,4 +1,5 @@
 import { prisma } from "@/lib/prisma";
+import { isDirectMediaFile, isYouTubeUrl } from "@/lib/media/is-external-stream";
 
 let cachedFallbackGuideUrl: string | null | undefined;
 
@@ -14,6 +15,17 @@ async function getFallbackGuideUrl(): Promise<string | null> {
 
   cachedFallbackGuideUrl = track?.url ?? null;
   return cachedFallbackGuideUrl;
+}
+
+/** Streaming catalog: YouTube URLs are used as-is; direct files keep HEAD + fallback. */
+export async function resolveStreamingMediaUrl(url: string): Promise<string> {
+  if (isYouTubeUrl(url)) {
+    return url;
+  }
+  if (isDirectMediaFile(url)) {
+    return resolvePlayableGuideUrl(url);
+  }
+  return url;
 }
 
 /** Returns url if reachable, otherwise first seeded ambient track (MVP fallback). */
