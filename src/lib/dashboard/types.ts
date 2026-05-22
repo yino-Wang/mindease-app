@@ -2,8 +2,11 @@ export type SpotlightItem = {
   id: string;
   title: string;
   subtitle: string;
+  coverUrl: string;
   videoUrl: string | null;
   href: string;
+  durationMinutes: number;
+  rating: number;
 };
 
 export type TopPickItem = {
@@ -19,8 +22,11 @@ export type MadeForYouItem = {
   id: string;
   title: string;
   subtitle: string;
+  coverUrl: string;
   videoUrl: string | null;
   href: string;
+  durationMinutes: number;
+  rating: number;
 };
 
 import type { ZenCalendarData } from "@/lib/zen-calendar/types";

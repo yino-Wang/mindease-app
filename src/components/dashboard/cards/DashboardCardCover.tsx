@@ -1,10 +1,11 @@
 import Image from "next/image";
 import { SafeAmbientVideo } from "@/components/media/SafeAmbientVideo";
-import { CARD_MEDIA_ASPECT } from "@/lib/dashboard/styles";
 import { getNatureCover } from "@/lib/dashboard/cover-images";
+import { CARD_MEDIA_ASPECT } from "@/lib/dashboard/styles";
 
 type DashboardCardCoverProps = {
-  coverIndex: number;
+  coverUrl?: string;
+  coverIndex?: number;
   alt: string;
   videoUrl?: string | null;
   showVideo?: boolean;
@@ -12,22 +13,26 @@ type DashboardCardCoverProps = {
 };
 
 export function DashboardCardCover({
-  coverIndex,
+  coverUrl,
+  coverIndex = 0,
   alt,
   videoUrl,
   showVideo = true,
   priority = false,
 }: DashboardCardCoverProps) {
-  const cover = getNatureCover(coverIndex);
+  const fallback = getNatureCover(coverIndex);
+  const imageSrc = coverUrl ?? fallback.url;
+  const isLocal = imageSrc.startsWith("/");
 
   return (
     <div className={`relative overflow-hidden ${CARD_MEDIA_ASPECT}`}>
       <Image
-        src={cover.url}
-        alt={cover.alt || alt}
+        src={imageSrc}
+        alt={alt}
         fill
         sizes="320px"
         priority={priority}
+        unoptimized={isLocal}
         className="object-cover opacity-85 transition-opacity duration-700 group-hover:opacity-95 motion-reduce:transition-none"
       />
       <div

@@ -29,6 +29,7 @@ export function SpotlightVideoCard({
         className={`flex flex-col overflow-hidden ${CARD_RADIUS_SM} ${CARD_SURFACE} ${CARD_BORDER} ${CARD_HOVER_GLOW} group-hover:sacred-glow-subtle`}
       >
         <DashboardCardCover
+          coverUrl={item.coverUrl}
           coverIndex={coverIndex}
           alt={`${item.title}, ${item.subtitle}`}
           videoUrl={item.videoUrl}

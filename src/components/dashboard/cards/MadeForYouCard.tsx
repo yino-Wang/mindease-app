@@ -35,6 +35,7 @@ function CardBody({
       }`}
     >
       <DashboardCardCover
+        coverUrl={item.coverUrl}
         coverIndex={coverIndex}
         alt={item.title}
         videoUrl={item.videoUrl}
