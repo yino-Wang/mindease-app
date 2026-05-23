@@ -1,20 +1,24 @@
-import { type NextRequest, NextResponse } from "next/server";
+﻿import { type NextRequest, NextResponse } from "next/server";
 import { updateSession } from "@/lib/supabase/middleware";
 
 const PROTECTED_PREFIXES = [
+  "/dashboard",
   "/mixer",
   "/mornings",
   "/sleep",
   "/zen-timer",
-  "/journal",
+];
+
+const EXTENDED_PROTECTED_PREFIXES = [
+  ...PROTECTED_PREFIXES,
+  "/profile",
   "/courses",
   "/daily",
-  "/dashboard",
-  "/profile",
+  "/journal",
 ];
 
 function isProtectedPath(pathname: string) {
-  return PROTECTED_PREFIXES.some(
+  return EXTENDED_PROTECTED_PREFIXES.some(
     (prefix) => pathname === prefix || pathname.startsWith(`${prefix}/`)
   );
 }
@@ -22,6 +26,12 @@ function isProtectedPath(pathname: string) {
 export async function middleware(request: NextRequest) {
   const { user, response } = await updateSession(request);
   const { pathname } = request.nextUrl;
+
+  if (pathname === "/timer" || pathname.startsWith("/timer/")) {
+    const url = request.nextUrl.clone();
+    url.pathname = pathname.replace(/^\/timer/, "/zen-timer");
+    return NextResponse.redirect(url);
+  }
 
   if (isProtectedPath(pathname) && !user) {
     const loginUrl = request.nextUrl.clone();
@@ -35,23 +45,22 @@ export async function middleware(request: NextRequest) {
     return NextResponse.redirect(new URL(next, request.url));
   }
 
-  if (pathname === "/timer" || pathname.startsWith("/timer/")) {
-    const url = request.nextUrl.clone();
-    url.pathname = pathname.replace(/^\/timer/, "/zen-timer");
-    return NextResponse.redirect(url);
-  }
-
   return response;
 }
 
 export const config = {
   matcher: [
+    "/",
+    "/dashboard",
+    "/dashboard/:path*",
     "/mixer",
     "/mixer/:path*",
     "/mornings",
     "/mornings/:path*",
     "/sleep",
     "/sleep/:path*",
+    "/timer",
+    "/timer/:path*",
     "/zen-timer",
     "/zen-timer/:path*",
     "/journal",
@@ -60,8 +69,6 @@ export const config = {
     "/courses/:path*",
     "/daily",
     "/daily/:path*",
-    "/dashboard",
-    "/dashboard/:path*",
     "/profile",
     "/profile/:path*",
     "/login",

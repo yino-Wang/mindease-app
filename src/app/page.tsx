@@ -1,4 +1,5 @@
-import { HomeEntrance } from "@/components/home/HomeEntrance";
+﻿import { redirect } from "next/navigation";
+import { WelcomeSanctuary } from "@/components/welcome/WelcomeSanctuary";
 import { createClient } from "@/lib/supabase/server";
 
 export default async function Home() {
@@ -7,5 +8,9 @@ export default async function Home() {
     data: { user },
   } = await supabase.auth.getUser();
 
-  return <HomeEntrance isAuthenticated={!!user} />;
+  if (user) {
+    redirect("/dashboard");
+  }
+
+  return <WelcomeSanctuary />;
 }

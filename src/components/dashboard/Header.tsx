@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
@@ -71,13 +71,14 @@ function DesktopNav({ pathname }: { pathname: string }) {
 
 export function DashboardHeader({ userEmail }: DashboardHeaderProps) {
   const pathname = usePathname();
+  const homeHref = userEmail ? "/dashboard" : "/";
 
   return (
     <header className="fixed top-0 left-0 z-50 w-full border-b border-stone-900/60 bg-[#0D0E0E]/80 backdrop-blur-xl">
       <div className="hidden w-full grid-cols-3 items-center px-12 py-6 md:grid">
         <div className="flex items-center justify-start">
           <Link
-            href="/dashboard"
+            href={homeHref}
             className={`font-serif text-xl font-semibold tracking-[0.15em] transition-opacity duration-700 hover:opacity-90 ${FOCUS_RING}`}
           >
             <span className="bg-gradient-to-r from-stone-100 via-amber-200 to-amber-400 bg-clip-text text-transparent">
@@ -106,7 +107,7 @@ export function DashboardHeader({ userEmail }: DashboardHeaderProps) {
       <div className="flex w-full flex-col gap-3 px-6 py-4 md:hidden">
         <div className="flex items-center justify-between">
           <Link
-            href="/dashboard"
+            href={homeHref}
             className={`font-serif text-lg font-semibold tracking-[0.12em] ${FOCUS_RING}`}
           >
             <span className="bg-gradient-to-r from-stone-100 via-amber-200 to-amber-400 bg-clip-text text-transparent">
@@ -130,3 +131,4 @@ export function DashboardHeader({ userEmail }: DashboardHeaderProps) {
     </header>
   );
 }
+
