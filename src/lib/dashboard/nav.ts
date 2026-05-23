@@ -8,6 +8,12 @@ export type DashboardNavItem = {
 
 export const DASHBOARD_NAV_ITEMS: DashboardNavItem[] = [
   {
+    id: "about",
+    label: "Welcome",
+    href: "/about",
+    activePrefixes: ["/about"],
+  },
+  {
     id: "dashboard",
     label: "DASHBOARD",
     href: "/dashboard",
@@ -37,6 +43,7 @@ export const DASHBOARD_NAV_ITEMS: DashboardNavItem[] = [
     href: "/sleep",
     activePrefixes: ["/sleep"],
   },
+
 ];
 
 export function isNavItemActive(

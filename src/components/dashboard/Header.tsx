@@ -28,7 +28,7 @@ function NavItem({
   const tabClass = `group relative flex flex-col items-center px-3 py-1.5 transition-colors duration-500 ease-in-out motion-reduce:transition-none ${FOCUS_RING} ${
     active
       ? "rounded border border-amber-500/50 text-amber-400"
-      : "text-stone-500 hover:text-stone-200"
+      : "text-stone-500 hover:text-amber-400/70"
   }`;
 
   const underline = active ? (
