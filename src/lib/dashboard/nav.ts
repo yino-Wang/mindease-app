@@ -10,8 +10,8 @@ export const DASHBOARD_NAV_ITEMS: DashboardNavItem[] = [
   {
     id: "about",
     label: "Welcome",
-    href: "/about",
-    activePrefixes: ["/about"],
+    href: "/",
+    activePrefixes: ["/"],
   },
   {
     id: "dashboard",

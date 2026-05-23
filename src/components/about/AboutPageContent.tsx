@@ -19,7 +19,13 @@ import {
 const bleed =
   "relative -mx-6 w-[calc(100%+3rem)] sm:-mx-10 sm:w-[calc(100%+5rem)] lg:-mx-12 lg:w-[calc(100%+6rem)]";
 
-export function AboutPageContent() {
+type AboutPageContentProps = {
+  showSignInCta?: boolean;
+};
+
+export function AboutPageContent({
+  showSignInCta = false,
+}: AboutPageContentProps) {
   return (
     <div className={`${bleed} space-y-0 pb-16`}>
       {/* Hero — full-bleed cover */}
@@ -46,12 +52,28 @@ export function AboutPageContent() {
           <p className="text-lg font-semibold tracking-[0.35em] text-amber-400/90 uppercase">
             MindEase
           </p>
-          <h1
-            id="about-hero"
-            className="mt-4 max-w-5xl font-serif text-4xl leading-tight tracking-wide text-stone-50 sm:text-5xl lg:text-7xl lg:leading-[1.08]"
-          >
-            {ABOUT_HERO.headline}
-          </h1>
+          <div className="mt-4 flex flex-col gap-8 lg:flex-row lg:items-center lg:justify-between lg:gap-12">
+            <h1
+              id="about-hero"
+              className="max-w-5xl font-serif text-4xl leading-tight tracking-wide text-stone-50 sm:text-5xl lg:text-7xl lg:leading-[1.08]"
+            >
+              {ABOUT_HERO.headline}
+            </h1>
+            {showSignInCta && (
+              <div className="flex shrink-0 flex-col items-start gap-3 lg:items-end">
+                <Link
+                  href="/login?next=/dashboard"
+                  className={`sacred-glow inline-flex items-center justify-center rounded-full border border-amber-500/35 bg-amber-500/10 px-10 py-4 font-serif text-lg tracking-widest text-amber-300 transition-all duration-700 ease-in-out hover:border-amber-500/55 hover:bg-amber-500/20 hover:text-amber-200 motion-reduce:transition-none ${FOCUS_RING}`}
+                >
+                  Sign in to explore more
+                </Link>
+                <p className="max-w-xs text-sm leading-relaxed tracking-wide text-stone-500 lg:text-right">
+                  Create a free account to open Dashboard, modalities, and your
+                  practice calendar.
+                </p>
+              </div>
+            )}
+          </div>
           <div className="mt-10 grid max-w-6xl gap-6 lg:grid-cols-2 lg:gap-12">
             <p className="text-base leading-relaxed tracking-wide text-stone-300 lg:text-lg">
               {ABOUT_HERO.subline}

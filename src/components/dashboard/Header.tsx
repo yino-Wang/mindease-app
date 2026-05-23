@@ -71,7 +71,7 @@ function DesktopNav({ pathname }: { pathname: string }) {
 
 export function DashboardHeader({ userEmail }: DashboardHeaderProps) {
   const pathname = usePathname();
-  const homeHref = userEmail ? "/dashboard" : "/";
+  const homeHref = "/";
 
   return (
     <header className="fixed top-0 left-0 z-50 w-full border-b border-stone-900/60 bg-[#0D0E0E]/80 backdrop-blur-xl">
