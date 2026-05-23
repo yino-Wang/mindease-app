@@ -5,7 +5,7 @@ import { DashboardViewport } from "@/components/dashboard/DashboardViewport";
 import { createClient } from "@/lib/supabase/server";
 
 export const metadata: Metadata = {
-  title: "About | MindEase",
+  title: "Welcome | MindEase",
   description:
     "A digital sanctuary forged to slow down the cadence of modern noise.",
 };

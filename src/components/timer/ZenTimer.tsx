@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import Link from "next/link";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
@@ -164,12 +164,14 @@ export function ZenTimer() {
         >
           MindEase
         </Link>
-        <a
-          href="/auth/signout"
-          className="text-xs tracking-widest text-stone-500 uppercase transition-colors duration-700 hover:text-stone-300"
-        >
-          Sign out
-        </a>
+                <form action="/auth/signout" method="post">
+          <button
+            type="submit"
+            className="text-xs tracking-widest text-stone-500 uppercase transition-colors duration-700 hover:text-stone-300"
+          >
+            Sign out
+          </button>
+        </form>
       </header>
 
       <main className="relative z-10 flex flex-1 flex-col items-center justify-center gap-8 py-24">
@@ -228,3 +230,4 @@ export function ZenTimer() {
     </div>
   );
 }
+
