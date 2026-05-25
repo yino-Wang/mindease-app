@@ -1,7 +1,11 @@
 import "dotenv/config";
+import fs from "node:fs";
+import path from "node:path";
 import { PrismaClient } from "@prisma/client";
 
 const prisma = new PrismaClient();
+
+const LIBRARY_CATEGORIES = ["MIXER", "MORNINGS", "SLEEP"] as const;
 
 const BUCKET = "meditation-assets";
 const COURSE_TITLE = "3-Day Mindfulness Foundation Course";
@@ -201,17 +205,6 @@ const CATEGORY_LIBRARY_SEED = [
     sortOrder: 3,
   },
   {
-    name: "Soft Horizon Open",
-    category: "MORNINGS",
-    introduction:
-      "Expand the chest toward a horizon only you can see. Let morning be spacious, not something to conquer.",
-    coverUrl: "/images/covers/mornings-4.jpg",
-    url: "https://www.youtube.com/watch?v=vtOAnC73xtk",
-    duration: 900,
-    author: "MindEase",
-    sortOrder: 4,
-  },
-  {
     name: "Soothing Breathwork Meditation",
     category: "MORNINGS",
     introduction:
@@ -220,7 +213,7 @@ const CATEGORY_LIBRARY_SEED = [
     url: "https://www.youtube.com/watch?v=Xw52flWo6-M&list=PLSCtKorB3pjGvw75CHlCtBesHF74Zgn7K",
     duration: 1080,
     author: "MindEase",
-    sortOrder: 5,
+    sortOrder: 4,
   },
   {
     name: "Rewire for Success, Love, & Abundance",
@@ -611,6 +604,48 @@ async function seedDailyZen(): Promise<{ created: number; updated: number }> {
   return { created, updated };
 }
 
+function publicCoverExists(coverUrl: string | null | undefined): boolean {
+  const trimmed = coverUrl?.trim();
+  if (!trimmed) return false;
+  const relative = trimmed.startsWith("/") ? trimmed.slice(1) : trimmed;
+  return fs.existsSync(path.join(process.cwd(), "public", relative));
+}
+
+/** Drop library rows not in seed, missing cover file, or empty coverUrl. */
+async function cleanupCategoryLibrary(): Promise<number> {
+  const seedNamesByCategory = new Map<string, Set<string>>();
+  for (const item of CATEGORY_LIBRARY_SEED) {
+    if (
+      !(LIBRARY_CATEGORIES as readonly string[]).includes(item.category)
+    ) {
+      continue;
+    }
+    if (!seedNamesByCategory.has(item.category)) {
+      seedNamesByCategory.set(item.category, new Set());
+    }
+    seedNamesByCategory.get(item.category)!.add(item.name);
+  }
+
+  const libraryRows = await prisma.meditationAudio.findMany({
+    where: { category: { in: [...LIBRARY_CATEGORIES] } },
+    select: { id: true, name: true, category: true, coverUrl: true },
+  });
+
+  let removed = 0;
+  for (const row of libraryRows) {
+    const inSeed = seedNamesByCategory.get(row.category)?.has(row.name) ?? false;
+    const hasCover = publicCoverExists(row.coverUrl);
+    if (!inSeed || !hasCover) {
+      await prisma.meditationAudio.delete({ where: { id: row.id } });
+      const reason = !inSeed ? "not in seed" : "blank or missing cover";
+      console.log(`  remove library [${row.category}]: ${row.name} (${reason})`);
+      removed++;
+    }
+  }
+
+  return removed;
+}
+
 async function seedCategoryLibrary(): Promise<{
   created: number;
   updated: number;
@@ -625,6 +660,8 @@ async function seedCategoryLibrary(): Promise<{
   if (legacyTimer.count > 0) {
     console.log(`  remove legacy TIMER library: ${legacyTimer.count} rows`);
   }
+
+  const cleaned = await cleanupCategoryLibrary();
 
   for (const item of CATEGORY_LIBRARY_SEED) {
     const existing = await prisma.meditationAudio.findFirst({
@@ -658,7 +695,7 @@ async function seedCategoryLibrary(): Promise<{
     }
   }
 
-  return { created, updated, removed: legacyTimer.count };
+  return { created, updated, removed: legacyTimer.count + cleaned };
 }
 
 async function seedStreamingItems(): Promise<{
@@ -754,7 +791,7 @@ async function main() {
     `  Daily Zen: ${daily.created} created, ${daily.updated} updated`
   );
   console.log(
-    `  Category library: ${library.created} created, ${library.updated} updated, ${library.removed} TIMER removed`
+    `  Category library: ${library.created} created, ${library.updated} updated, ${library.removed} removed`
   );
   console.log(
     `  Streaming: ${streaming.spotlight} spotlight created, ${streaming.madeForYou} made-for-you created`
