@@ -1,36 +1,175 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# MindEase
 
-## Getting Started
+A meditation web app with a dark, minimal “sanctuary” aesthetic. Guests land on a welcome About page; signed-in users get a dashboard, modality libraries, a Zen timer with layered ambient sound, structured courses, and session logging with optional journaling.
 
-First, run the development server:
+Built with **Next.js 16** (App Router), **React 19**, **Tailwind CSS 4**, **Prisma**, and **Supabase** (Auth + PostgreSQL).
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+## Features
+
+| Area | Description |
+|------|-------------|
+| **Welcome (`/`)** | Full About experience; guests see **Sign in to explore more** → `/login?next=/dashboard` |
+| **Dashboard** | Top Pick (Daily Zen), Video Spotlight, Made For You, Zen Calendar (practice history) |
+| **Zen Timer** | Preset/custom duration, layered ambient mixer (Web Audio API), pause/continue, progress bar, session log + journal modal |
+| **MIXER / MORNINGS / SLEEP** | Category video libraries (YouTube playback) with cover art and intros |
+| **Courses** | 3-day foundation course with day gating and progress |
+| **Daily Zen** | Weekday-themed guided practice |
+| **Profile** | User profile surface |
+| **Auth** | Email/password sign-in, sign-up, magic link via Supabase |
+
+## Tech stack
+
+- **Framework:** Next.js 16, TypeScript
+- **UI:** Tailwind CSS 4, Framer Motion
+- **Database:** PostgreSQL (Supabase) via Prisma
+- **Auth:** Supabase Auth (`@supabase/ssr`)
+- **Media:** YouTube (`react-player`), Supabase Storage for ambient MP3s and optional assets
+
+## Project structure
+
+```
+src/
+  app/                    # Routes (pages + API)
+    api/                  # REST: meditate, streaming, courses, ambient-tracks, logs, journal
+    auth/                 # callback, signout
+    dashboard/            # Home + meditate/play detail
+    zen-timer/            # Timer tool
+    mixer|mornings|sleep/ # Category libraries
+    courses|daily|profile/
+    login/
+    page.tsx              # Welcome / About (root)
+  components/             # UI by domain (dashboard, timer, about, courses, streaming, auth)
+  hooks/                  # useZenTimer, useAudioMixer, useChime
+  lib/                    # Prisma, Supabase, queries, content
+prisma/
+  schema.prisma           # Data model
+  seed.ts                 # MVP seed data + library sync/cleanup
+public/
+  images/covers/          # Library thumbnails (e.g. mixer-1.png, m1.png, s1.png)
+  cover/                  # Dashboard / streaming covers
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## Routes
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+| Path | Access | Purpose |
+|------|--------|---------|
+| `/` | Public | Welcome / About |
+| `/login` | Public | Sign in / sign up / magic link |
+| `/dashboard` | Auth | Main hub |
+| `/zen-timer` | Auth | Meditation timer |
+| `/mixer`, `/mornings`, `/sleep` | Auth | Category libraries |
+| `/dashboard/meditate/[id]` | Auth | Library session detail + play |
+| `/dashboard/play/[id]` | Auth | Streaming item player |
+| `/courses`, `/courses/.../day/[n]` | Auth | Foundation course |
+| `/daily` | Auth | Daily Zen |
+| `/profile` | Auth | Profile |
+| `/about` | Public | Redirects to `/` |
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+`/timer` redirects to `/zen-timer`.
 
-## Learn More
+## Prerequisites
 
-To learn more about Next.js, take a look at the following resources:
+- Node.js 20+
+- Supabase project (Auth + PostgreSQL)
+- Optional: Supabase Storage bucket `meditation-assets` for ambient timer audio
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## Environment variables
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+Create `.env` in the project root (do not commit):
 
-## Deploy on Vercel
+```env
+# Database (Supabase PostgreSQL)
+DATABASE_URL="postgresql://..."
+DIRECT_URL="postgresql://..."   # optional pooler URL for Prisma
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+# Supabase Auth
+NEXT_PUBLIC_SUPABASE_URL=https://<project-ref>.supabase.co
+NEXT_PUBLIC_SUPABASE_ANON_KEY=<anon-key>
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+# App URL (magic links / callbacks)
+NEXT_PUBLIC_SITE_URL=http://localhost:3000
+
+# Optional overrides
+NEXT_PUBLIC_CHIME_AUDIO_URL=
+CHIME_AUDIO_URL=
+```
+
+See [`src/app/docs/auth-setup.md`](src/app/docs/auth-setup.md) for Supabase dashboard settings (redirect URLs, email provider).
+
+## Getting started
+
+```bash
+# Install dependencies
+npm install
+
+# Push schema and generate client
+npm run db:push
+npm run db:generate
+
+# Seed demo content (ambient tracks, course, libraries, streaming catalog)
+npm run db:seed
+
+# Run dev server
+npm run dev
+```
+
+Open [http://localhost:3000](http://localhost:3000).
+
+## Scripts
+
+| Command | Description |
+|---------|-------------|
+| `npm run dev` | Start Next.js dev server |
+| `npm run build` | Production build |
+| `npm run start` | Start production server |
+| `npm run lint` | ESLint |
+| `npm run db:generate` | Generate Prisma client |
+| `npm run db:push` | Sync schema to database |
+| `npm run db:migrate` | Run migrations (dev) |
+| `npm run db:seed` | Seed / update MVP data |
+| `npm run db:studio` | Open Prisma Studio |
+
+## Content & libraries
+
+Category videos (**MIXER**, **MORNINGS**, **SLEEP**) are stored in `meditation_audios` and loaded via `GET /api/meditate?category=MIXER|MORNINGS|SLEEP`.
+
+**To change library videos:**
+
+1. Edit `CATEGORY_LIBRARY_SEED` in [`prisma/seed.ts`](prisma/seed.ts) (`name`, `url` for YouTube, `coverUrl`, `introduction`, `sortOrder`).
+2. Add matching cover images under `public/images/covers/`.
+3. Run `npm run db:seed`.
+
+The seed script **upserts** items by `name` + `category` and **removes** library rows that are no longer in the seed or have missing cover files under `public/`.
+
+Dashboard streaming (Spotlight / Made For You) and course/daily content are also defined in `prisma/seed.ts`.
+
+## API overview
+
+- `GET /api/meditate?category=` — category library cards
+- `GET /api/streaming`, `GET /api/streaming/[id]` — streaming catalog
+- `POST /api/meditate/log` — log timer/course sessions
+- `POST /api/meditate/journal` — attach journal to a log
+- `GET /api/ambient-tracks` — Zen Timer soundscape layers
+- `GET /api/courses`, `GET /api/daily-zen` — course and daily content
+
+## Auth flow
+
+- Middleware refreshes the Supabase session and protects app routes (see [`src/middleware.ts`](src/middleware.ts)).
+- Sign-in redirects to `next` query param or `/dashboard`.
+- Sign-out: `POST /auth/signout` → clears cookies and redirects to `/`.
+
+## Design notes
+
+- Dark theme base: `#0D0E0E`, amber accents (`.sacred-glow`).
+- Serif headings, wide letter-spacing for a calm editorial feel.
+- Timer enters an immersive mode (footer fades) while session HUD stays visible for time remaining and pause/continue/exit.
+
+## Further reading
+
+- [`src/app/docs/auth-setup.md`](src/app/docs/auth-setup.md) — Supabase Auth checklist
+- [`src/app/docs/PRD.md`](src/app/docs/PRD.md) — product notes
+- [`AGENTS.md`](AGENTS.md) — Next.js agent rules for this repo
+
+## License
+
+Private project (`"private": true` in `package.json`).
