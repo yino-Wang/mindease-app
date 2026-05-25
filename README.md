@@ -2,6 +2,10 @@
 
 A meditation web app with a dark, minimal “sanctuary” aesthetic. Guests land on a welcome About page; signed-in users get a dashboard, modality libraries, a Zen timer with layered ambient sound, structured courses, and session logging with optional journaling.
 
+<p align="center">
+  <img src="public/screenshots/welcome.png" alt="MindEase" width="600" />
+</p>
+
 Built with **Next.js 16** (App Router), **React 19**, **Tailwind CSS 4**, **Prisma**, and **Supabase** (Auth + PostgreSQL).
 
 ## Features
