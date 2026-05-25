@@ -28,8 +28,38 @@ export function useAudioMixer() {
   const volumesRef = useRef<Map<string, number>>(new Map());
   const sourcesRef = useRef<Map<string, ActiveSource>>(new Map());
   const tracksRef = useRef<AmbientTrack[]>([]);
+  const loadGenerationRef = useRef(0);
+
+  const teardownContext = useCallback(() => {
+    loadGenerationRef.current += 1;
+    for (const { source } of sourcesRef.current.values()) {
+      try {
+        source.stop();
+      } catch {
+        // already stopped
+      }
+    }
+    sourcesRef.current.clear();
+    gainsRef.current.clear();
+    buffersRef.current.clear();
+    volumesRef.current.clear();
+    masterGainRef.current = null;
+    if (contextRef.current) {
+      void contextRef.current.close();
+      contextRef.current = null;
+    }
+    setIsPlaying(false);
+    setIsReady(false);
+  }, []);
 
   const ensureContext = useCallback(async () => {
+    if (contextRef.current?.state === "closed") {
+      contextRef.current = null;
+      masterGainRef.current = null;
+      gainsRef.current.clear();
+      sourcesRef.current.clear();
+    }
+
     if (!contextRef.current) {
       contextRef.current = new AudioContext();
       masterGainRef.current = contextRef.current.createGain();
@@ -43,12 +73,15 @@ export function useAudioMixer() {
   }, []);
 
   const loadTracks = useCallback(async (tracks: AmbientTrack[]) => {
+    const generation = ++loadGenerationRef.current;
     setError(null);
     setIsReady(false);
     tracksRef.current = tracks;
 
     try {
       const ctx = await ensureContext();
+      if (generation !== loadGenerationRef.current) return;
+
       const master = masterGainRef.current!;
 
       buffersRef.current.clear();
@@ -62,7 +95,9 @@ export function useAudioMixer() {
             throw new Error(`Failed to load ${track.name} (${response.status})`);
           }
           const arrayBuffer = await response.arrayBuffer();
+          if (generation !== loadGenerationRef.current) return;
           const audioBuffer = await ctx.decodeAudioData(arrayBuffer);
+          if (generation !== loadGenerationRef.current) return;
           buffersRef.current.set(track.id, audioBuffer);
 
           const gain = ctx.createGain();
@@ -72,6 +107,8 @@ export function useAudioMixer() {
           volumesRef.current.set(track.id, 0);
         })
       );
+
+      if (generation !== loadGenerationRef.current) return;
 
       const failed = results.filter((r) => r.status === "rejected");
       if (buffersRef.current.size === 0) {
@@ -114,6 +151,20 @@ export function useAudioMixer() {
     []
   );
 
+  const getOrCreateTrackGain = useCallback(
+    (ctx: AudioContext, trackId: string, master: GainNode) => {
+      const existing = gainsRef.current.get(trackId);
+      if (existing && existing.context === ctx) {
+        return existing;
+      }
+      const gain = ctx.createGain();
+      gain.connect(master);
+      gainsRef.current.set(trackId, gain);
+      return gain;
+    },
+    []
+  );
+
   const start = useCallback(async () => {
     const ctx = await ensureContext();
     const master = masterGainRef.current!;
@@ -128,12 +179,7 @@ export function useAudioMixer() {
         }
       }
 
-      const gain =
-        gainsRef.current.get(trackId) ?? ctx.createGain();
-      if (!gainsRef.current.has(trackId)) {
-        gain.connect(master);
-        gainsRef.current.set(trackId, gain);
-      }
+      const gain = getOrCreateTrackGain(ctx, trackId, master);
 
       const volume = volumesRef.current.get(trackId) ?? 0;
       const now = ctx.currentTime;
@@ -149,7 +195,7 @@ export function useAudioMixer() {
     }
 
     setIsPlaying(true);
-  }, [ensureContext]);
+  }, [ensureContext, getOrCreateTrackGain]);
 
   const stop = useCallback(() => {
     for (const { source } of sourcesRef.current.values()) {
@@ -165,11 +211,9 @@ export function useAudioMixer() {
 
   useEffect(() => {
     return () => {
-      stop();
-      void contextRef.current?.close();
-      contextRef.current = null;
+      teardownContext();
     };
-  }, [stop]);
+  }, [teardownContext]);
 
   return {
     isReady,

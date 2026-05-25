@@ -1,12 +1,14 @@
 ﻿"use client";
 
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { BreathingBubble } from "@/components/timer/BreathingBubble";
 import { DurationPicker } from "@/components/timer/DurationPicker";
 import { SoundscapePanel } from "@/components/timer/SoundscapePanel";
 import { TimerChrome } from "@/components/timer/TimerChrome";
 import { TimerControls } from "@/components/timer/TimerControls";
+import { TimerSessionHud } from "@/components/timer/TimerSessionHud";
 import { ZenJournalModal } from "@/components/timer/ZenJournalModal";
 import { useAudioMixer, type AmbientTrack } from "@/hooks/useAudioMixer";
 import { useChime } from "@/hooks/useChime";
@@ -14,6 +16,7 @@ import { useZenTimer } from "@/hooks/useZenTimer";
 import { DEFAULT_PRESET_MINUTES } from "@/lib/timer/constants";
 
 export function ZenTimer() {
+  const router = useRouter();
   const [selectedMinutes, setSelectedMinutes] = useState(
     DEFAULT_PRESET_MINUTES
   );
@@ -134,17 +137,40 @@ export function ZenTimer() {
     timer.start();
   };
 
-  const handleReset = () => {
+  const handlePause = useCallback(() => {
+    timer.pause();
+    mixer.stop();
+  }, [timer, mixer]);
+
+  const handleResume = useCallback(async () => {
+    await mixer.ensureContext();
+    timer.resume();
+    await mixer.start();
+  }, [timer, mixer]);
+
+  const handleReset = useCallback(() => {
     mixer.stop();
     sessionStartedAtRef.current = null;
     setJournalOpen(false);
     setCompletedLogId(null);
     setLogError(null);
     timer.reset();
-  };
+  }, [mixer, timer]);
+
+  const handleExit = useCallback(() => {
+    handleReset();
+    router.push("/dashboard");
+  }, [handleReset, router]);
 
   const showBubble =
-    timer.status === "running" || timer.status === "immersive";
+    timer.status === "running" ||
+    timer.status === "immersive" ||
+    timer.status === "paused";
+
+  const showSessionHud =
+    timer.status === "running" ||
+    timer.status === "immersive" ||
+    timer.status === "paused";
 
   const selectedMinutesResolved = useMemo(() => {
     return Math.round(timer.totalMs / 60000) || selectedMinutes;
@@ -159,29 +185,39 @@ export function ZenTimer() {
 
       <header className="absolute top-0 left-0 right-0 z-10 flex items-center justify-between px-6 py-8">
         <Link
-          href="/"
-          className="font-serif text-sm tracking-widest text-stone-500 uppercase transition-colors duration-700 hover:text-stone-300"
+          href="/dashboard"
+          className="text-lg tracking-widest text-stone-500 uppercase transition-colors duration-700 ease-in-out hover:text-stone-300"
         >
-          MindEase
+          Back
         </Link>
-                <form action="/auth/signout" method="post">
+        <form action="/auth/signout" method="post">
           <button
             type="submit"
-            className="text-xs tracking-widest text-stone-500 uppercase transition-colors duration-700 hover:text-stone-300"
+            className="text-lg tracking-widest text-stone-500 uppercase transition-colors duration-700 hover:text-stone-300"
           >
             Sign out
           </button>
         </form>
       </header>
 
-      <main className="relative z-10 flex flex-1 flex-col items-center justify-center gap-8 py-24">
-        {!showBubble && (
+      <main className="relative z-10 flex flex-1 flex-col items-center justify-center gap-10 px-6 py-24">
+        {showSessionHud && (
+          <TimerSessionHud
+            status={timer.status}
+            remainingMs={timer.remainingMs}
+            totalMs={timer.totalMs}
+            onPause={handlePause}
+            onResume={() => void handleResume()}
+            onExit={handleExit}
+          />
+        )}
+        {!showBubble && !showSessionHud && (
           <div
             className="sacred-glow h-32 w-32 rounded-full bg-amber-500/10 blur-sm"
             aria-hidden
           />
         )}
-        {showBubble && <div className="h-40 w-40" aria-hidden />}
+        {showBubble && <div className="h-32 w-32 shrink-0 sm:h-40 sm:w-40" aria-hidden />}
       </main>
 
       <footer className="relative z-10 w-full max-w-md px-6 pb-12">
@@ -209,6 +245,7 @@ export function ZenTimer() {
               remainingMs={timer.remainingMs}
               onStart={handleStart}
               onReset={handleReset}
+              onExit={handleExit}
             />
             {logError && timer.status === "completed" && (
               <p className="text-center text-sm text-stone-500" role="alert">

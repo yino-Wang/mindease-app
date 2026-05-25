@@ -21,7 +21,10 @@ export function SoundscapePanel({
   onVolumeChange,
 }: SoundscapePanelProps) {
   const disabled =
-    status === "running" || status === "immersive" || status === "completed";
+    status === "running" ||
+    status === "immersive" ||
+    status === "paused" ||
+    status === "completed";
 
   if (error) {
     return (

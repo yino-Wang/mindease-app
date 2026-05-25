@@ -8,6 +8,7 @@ type TimerControlsProps = {
   remainingMs: number;
   onStart: () => void;
   onReset: () => void;
+  onExit?: () => void;
 };
 
 export function TimerControls({
@@ -15,11 +16,36 @@ export function TimerControls({
   remainingMs,
   onStart,
   onReset,
+  onExit,
 }: TimerControlsProps) {
-  const isActive =
-    status === "running" || status === "immersive" || status === "completed";
+  const isSessionActive =
+    status === "running" || status === "immersive" || status === "paused";
+  const isActive = isSessionActive || status === "completed";
   const canStart = status === "armed";
   const showReset = status !== "idle";
+
+  if (isSessionActive) {
+    return (
+      <div className="flex flex-wrap justify-center gap-3">
+        <button
+          type="button"
+          onClick={onReset}
+          className="rounded-full border border-stone-700/80 bg-stone-900/40 px-6 py-3 text-sm tracking-widest text-stone-400 uppercase transition-all duration-700 ease-in-out hover:border-stone-600 hover:text-stone-300"
+        >
+          Reset
+        </button>
+        {onExit && (
+          <button
+            type="button"
+            onClick={onExit}
+            className="rounded-full border border-stone-700/80 bg-stone-900/40 px-6 py-3 text-sm tracking-widest text-stone-400 uppercase transition-all duration-700 ease-in-out hover:border-stone-600 hover:text-stone-300"
+          >
+            Exit
+          </button>
+        )}
+      </div>
+    );
+  }
 
   if (status === "completed") {
     return (
@@ -51,7 +77,7 @@ export function TimerControls({
         {formatRemainingMs(remainingMs)}
       </p>
 
-      <div className="flex gap-3">
+      <div className="flex flex-wrap justify-center gap-3">
         {!isActive && (
           <button
             type="button"

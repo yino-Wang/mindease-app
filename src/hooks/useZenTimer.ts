@@ -11,6 +11,7 @@ export type TimerStatus =
   | "armed"
   | "running"
   | "immersive"
+  | "paused"
   | "completed";
 
 export type UseZenTimerOptions = {
@@ -35,6 +36,8 @@ export function useZenTimer(options: UseZenTimerOptions = {}) {
 
   const endAtRef = useRef<number | null>(null);
   const immersiveAtRef = useRef<number | null>(null);
+  const pausedImmersiveDelayRef = useRef(IMMERSIVE_DELAY_MS);
+  const pausedWasImmersiveRef = useRef(false);
   const rafRef = useRef<number | null>(null);
   const onStartRef = useRef(options.onStart);
   const onCompleteRef = useRef(options.onComplete);
@@ -102,14 +105,57 @@ export function useZenTimer(options: UseZenTimerOptions = {}) {
     rafRef.current = requestAnimationFrame(tick);
   }, [status, remainingMs, immersiveDelayMs, cancelTick, tick]);
 
+  const pause = useCallback(() => {
+    if (status !== "running" && status !== "immersive") return;
+
+    cancelTick();
+    const now = Date.now();
+
+    if (endAtRef.current !== null) {
+      setRemainingMs(Math.max(0, endAtRef.current - now));
+    }
+
+    pausedWasImmersiveRef.current = isImmersive;
+    pausedImmersiveDelayRef.current =
+      immersiveAtRef.current !== null
+        ? Math.max(0, immersiveAtRef.current - now)
+        : immersiveDelayMs;
+
+    endAtRef.current = null;
+    immersiveAtRef.current = null;
+    setStatus("paused");
+  }, [status, isImmersive, immersiveDelayMs, cancelTick]);
+
+  const resume = useCallback(() => {
+    if (status !== "paused") return;
+
+    const now = Date.now();
+    endAtRef.current = now + remainingMs;
+
+    if (pausedWasImmersiveRef.current) {
+      setIsImmersive(true);
+      setStatus("immersive");
+      immersiveAtRef.current = null;
+    } else {
+      setIsImmersive(false);
+      setStatus("running");
+      immersiveAtRef.current = now + pausedImmersiveDelayRef.current;
+    }
+
+    cancelTick();
+    rafRef.current = requestAnimationFrame(tick);
+  }, [status, remainingMs, cancelTick, tick]);
+
   const reset = useCallback(() => {
     cancelTick();
     endAtRef.current = null;
     immersiveAtRef.current = null;
+    pausedImmersiveDelayRef.current = immersiveDelayMs;
+    pausedWasImmersiveRef.current = false;
     setIsImmersive(false);
     setRemainingMs(totalMs);
     setStatus("idle");
-  }, [cancelTick, totalMs]);
+  }, [cancelTick, totalMs, immersiveDelayMs]);
 
   useEffect(() => {
     return () => cancelTick();
@@ -122,6 +168,8 @@ export function useZenTimer(options: UseZenTimerOptions = {}) {
     isImmersive,
     setDuration,
     start,
+    pause,
+    resume,
     reset,
   };
 }

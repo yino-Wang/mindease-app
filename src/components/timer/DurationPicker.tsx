@@ -26,7 +26,10 @@ export function DurationPicker({
 }: DurationPickerProps) {
   const [showCustom, setShowCustom] = useState(false);
   const disabled =
-    status === "running" || status === "immersive" || status === "completed";
+    status === "running" ||
+    status === "immersive" ||
+    status === "paused" ||
+    status === "completed";
 
   const isPreset = (PRESET_MINUTES as readonly number[]).includes(
     selectedMinutes
