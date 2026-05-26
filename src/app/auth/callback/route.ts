@@ -17,7 +17,14 @@ export async function GET(request: Request) {
       } = await supabase.auth.getUser();
 
       if (user) {
-        await ensureUser(user);
+        const type = searchParams.get("type");
+        const authMethod =
+          type === "magiclink" ? ("magic_link" as const) : undefined;
+        await ensureUser({
+          id: user.id,
+          email: user.email,
+          authMethod,
+        });
       }
 
       return NextResponse.redirect(`${origin}${next}`);

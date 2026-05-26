@@ -39,7 +39,11 @@ export async function signIn(
   }
 
   if (data.user) {
-    await ensureUser(data.user);
+    await ensureUser({
+      id: data.user.id,
+      email: data.user.email,
+      authMethod: "password",
+    });
   }
 
   redirect(next ?? "/dashboard");
@@ -75,7 +79,11 @@ export async function signUp(
   }
 
   if (data.user) {
-    await ensureUser(data.user);
+    await ensureUser({
+      id: data.user.id,
+      email: data.user.email,
+      authMethod: "password",
+    });
   }
 
   if (data.session) {
