@@ -1,6 +1,7 @@
 import { getFoundationCourse } from "@/lib/courses/queries";
 import { getTodayDailyZen } from "@/lib/daily-zen/resolve";
 import { resolvePlayableVideoUrl } from "@/lib/media/resolve-playable-url";
+import { fetchDailyQuote } from "@/lib/quotes/fetch-daily-quote";
 import { getStreamingItemsBySection } from "@/lib/streaming/queries";
 import { getZenCalendarData } from "@/lib/zen-calendar/aggregate";
 import type {
@@ -16,13 +17,15 @@ function formatDurationMinutes(seconds: number | null): number | null {
 export async function getDashboardContent(
   userId: string
 ): Promise<DashboardContent> {
-  const [course, daily, zenCalendar, spotlight, madeForYou] = await Promise.all([
-    getFoundationCourse(),
-    getTodayDailyZen(),
-    getZenCalendarData(userId),
-    getStreamingItemsBySection("SPOTLIGHT"),
-    getStreamingItemsBySection("MADE_FOR_YOU"),
-  ]);
+  const [course, daily, zenCalendar, spotlight, madeForYou, dailyQuote] =
+    await Promise.all([
+      getFoundationCourse(),
+      getTodayDailyZen(),
+      getZenCalendarData(userId),
+      getStreamingItemsBySection("SPOTLIGHT"),
+      getStreamingItemsBySection("MADE_FOR_YOU"),
+      fetchDailyQuote(),
+    ]);
 
   const courseId = course?.id ?? null;
 
@@ -45,5 +48,6 @@ export async function getDashboardContent(
     madeForYou,
     zenCalendar,
     courseId,
+    dailyQuote,
   };
 }

@@ -29,6 +29,7 @@ export type MadeForYouItem = {
   rating: number;
 };
 
+import type { DailyQuote } from "@/lib/quotes/types";
 import type { ZenCalendarData } from "@/lib/zen-calendar/types";
 
 export type DashboardContent = {
@@ -37,4 +38,5 @@ export type DashboardContent = {
   madeForYou: MadeForYouItem[];
   zenCalendar: ZenCalendarData;
   courseId: string | null;
+  dailyQuote: DailyQuote;
 };

@@ -20,7 +20,7 @@ export function DashboardPageBody({ content }: DashboardPageBodyProps) {
         seeAllHref="/courses"
       />
       <MadeForYouSection items={content.madeForYou} seeAllHref="/courses" />
-      <SacredQuoteBanner />
+      <SacredQuoteBanner quote={content.dailyQuote} />
     </>
   );
 }
