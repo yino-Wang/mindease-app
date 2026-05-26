@@ -25,9 +25,23 @@ Find both in Supabase Dashboard → **Project Settings → API**.
 
 On sign-in / callback, the app upserts `users` with `id` equal to Supabase Auth `user.id` and `email` from Auth.
 
+## Profile avatars (Storage)
+
+Create a **public** bucket named `avatars` in Supabase Storage.
+
+**RLS policies (example):**
+
+- Allow authenticated users to upload/update/delete only their folder: `{userId}/*`
+- Allow public read on the bucket (for `getPublicUrl` in the app)
+
+Path used by the app: `{userId}/avatar.jpg` (or `.png` / `.webp`).
+
+After creating the bucket, profile photo upload on `/profile` will work. Username and password changes use Prisma + Supabase Auth (password form is hidden for magic-link-only accounts).
+
 ## Manual test
 
 1. Visit `/zen-timer` while logged out → redirect to `/login`
 2. Sign up → `/zen-timer`
 3. Complete a session → journal modal saves via cookie session
-4. Sign out → `/login`
+4. Sign out → `/`
+5. `/profile` — edit username, upload avatar, change password (email/password accounts only)
