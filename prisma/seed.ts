@@ -287,7 +287,7 @@ const SPOTLIGHT_ITEMS = [
     tags: ["Empowerment", "Breath", "Focus"],
   },
   {
-    title: "10-Minute Guided Meditation: Self-Love | SELF",
+    title: "10-Minute Guided Meditation: Self-Love",
     description:
       "Daily health, fitness, beauty, style advice, and videos for people who want to achieve their personal best in life.",
     author: "Sora Lin",
@@ -698,12 +698,45 @@ async function seedCategoryLibrary(): Promise<{
   return { created, updated, removed: legacyTimer.count + cleaned };
 }
 
+const STREAMING_SECTIONS = ["SPOTLIGHT", "MADE_FOR_YOU"] as const;
+
+/** Remove spotlight / made-for-you rows that are no longer in seed. */
+async function cleanupStreamingCatalog(): Promise<number> {
+  const seedTitlesBySection = new Map<string, Set<string>>([
+    ["SPOTLIGHT", new Set(SPOTLIGHT_ITEMS.map((item) => item.title))],
+    ["MADE_FOR_YOU", new Set(MADE_FOR_YOU_ITEMS.map((item) => item.title))],
+  ]);
+
+  const rows = await prisma.streamingItem.findMany({
+    where: { sectionType: { in: [...STREAMING_SECTIONS] } },
+    select: { id: true, title: true, sectionType: true },
+  });
+
+  let removed = 0;
+  for (const row of rows) {
+    const inSeed =
+      seedTitlesBySection.get(row.sectionType)?.has(row.title) ?? false;
+    if (!inSeed) {
+      await prisma.streamingItem.delete({ where: { id: row.id } });
+      console.log(
+        `  remove streaming [${row.sectionType}]: ${row.title} (not in seed)`
+      );
+      removed++;
+    }
+  }
+
+  return removed;
+}
+
 async function seedStreamingItems(): Promise<{
   spotlight: number;
   madeForYou: number;
+  removed: number;
 }> {
   let spotlight = 0;
   let madeForYou = 0;
+
+  const removed = await cleanupStreamingCatalog();
 
   for (const item of SPOTLIGHT_ITEMS) {
     const existing = await prisma.streamingItem.findFirst({
@@ -761,7 +794,7 @@ async function seedStreamingItems(): Promise<{
     }
   }
 
-  return { spotlight, madeForYou };
+  return { spotlight, madeForYou, removed };
 }
 
 async function main() {
@@ -794,7 +827,7 @@ async function main() {
     `  Category library: ${library.created} created, ${library.updated} updated, ${library.removed} removed`
   );
   console.log(
-    `  Streaming: ${streaming.spotlight} spotlight created, ${streaming.madeForYou} made-for-you created`
+    `  Streaming: ${streaming.spotlight} spotlight created, ${streaming.madeForYou} made-for-you created, ${streaming.removed} removed`
   );
 }
 
