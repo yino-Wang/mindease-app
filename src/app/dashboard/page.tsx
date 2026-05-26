@@ -9,7 +9,16 @@ export default async function DashboardPage() {
   const content = await getDashboardContent(user.id);
 
   return (
-    <DashboardViewport header={<DashboardHeader userEmail={user.email} />}>
+    <DashboardViewport
+      header={
+        <DashboardHeader
+          userEmail={user.email}
+          username={user.username}
+          avatarUrl={user.avatarUrl}
+          displayName={user.displayName}
+        />
+      }
+    >
       <DashboardPageBody content={content} />
     </DashboardViewport>
   );

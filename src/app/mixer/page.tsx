@@ -4,5 +4,5 @@ import { requireAuth } from "@/lib/auth/require-auth";
 export default async function MixerPage() {
   const user = await requireAuth("/mixer");
 
-  return <CategoryPageShell category="MIXER" userEmail={user.email} />;
+  return <CategoryPageShell category="MIXER" user={user} />;
 }

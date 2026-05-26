@@ -1,21 +1,53 @@
 ﻿"use client";
 
+import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import {
   DASHBOARD_NAV_ITEMS,
   isNavItemActive,
 } from "@/lib/dashboard/nav";
+import { getInitials } from "@/lib/profile/queries";
 import { FOCUS_RING } from "@/lib/dashboard/styles";
 
 type DashboardHeaderProps = {
   userEmail?: string | null;
+  username?: string | null;
+  avatarUrl?: string | null;
+  displayName?: string | null;
 };
 
-function getInitials(email: string | null | undefined): string {
-  if (!email) return "ME";
-  const part = email.split("@")[0];
-  return part.slice(0, 2).toUpperCase();
+function ProfileChip({
+  userEmail,
+  username,
+  avatarUrl,
+  displayName,
+  className,
+}: DashboardHeaderProps & { className?: string }) {
+  const initials = getInitials(username, userEmail ?? "member@mindease.app");
+  const label = displayName ?? userEmail ?? "Profile";
+
+  return (
+    <span
+      className={`sacred-glow relative flex items-center justify-center overflow-hidden rounded-full border border-stone-800/80 bg-stone-900/60 backdrop-blur-md ${className ?? "h-10 w-10"}`}
+    >
+      {avatarUrl ? (
+        <Image
+          src={avatarUrl}
+          alt=""
+          fill
+          unoptimized
+          className="object-cover"
+          sizes="40px"
+        />
+      ) : (
+        <span className="text-xs font-semibold tracking-widest text-amber-400/90">
+          {initials}
+        </span>
+      )}
+      <span className="sr-only">{label}</span>
+    </span>
+  );
 }
 
 function NavItem({
@@ -69,9 +101,15 @@ function DesktopNav({ pathname }: { pathname: string }) {
   );
 }
 
-export function DashboardHeader({ userEmail }: DashboardHeaderProps) {
+export function DashboardHeader({
+  userEmail,
+  username,
+  avatarUrl,
+  displayName,
+}: DashboardHeaderProps) {
   const pathname = usePathname();
   const homeHref = "/";
+  const chipProps = { userEmail, username, avatarUrl, displayName };
 
   return (
     <header className="fixed top-0 left-0 z-50 w-full border-b border-stone-900/60 bg-[#0D0E0E]/80 backdrop-blur-xl">
@@ -94,12 +132,10 @@ export function DashboardHeader({ userEmail }: DashboardHeaderProps) {
         <div className="flex items-center justify-end">
           <Link
             href="/profile"
-            className={`rounded-full border border-stone-800/80 p-[2px] transition-all duration-700 hover:border-amber-500/40 ${FOCUS_RING}`}
+            className={`rounded-full p-[2px] transition-all duration-700 hover:border-amber-500/40 ${FOCUS_RING}`}
             aria-label="Profile"
           >
-            <span className="sacred-glow flex h-10 w-10 items-center justify-center rounded-full bg-stone-900/60 text-xs font-semibold tracking-widest text-amber-400/90 backdrop-blur-md">
-              {getInitials(userEmail)}
-            </span>
+            <ProfileChip {...chipProps} />
           </Link>
         </div>
       </div>
@@ -116,12 +152,10 @@ export function DashboardHeader({ userEmail }: DashboardHeaderProps) {
           </Link>
           <Link
             href="/profile"
-            className={`rounded-full border border-stone-800/80 p-[2px] ${FOCUS_RING}`}
+            className={`rounded-full p-[2px] ${FOCUS_RING}`}
             aria-label="Profile"
           >
-            <span className="flex h-9 w-9 items-center justify-center rounded-full bg-stone-900/60 text-xs text-amber-400/90">
-              {getInitials(userEmail)}
-            </span>
+            <ProfileChip {...chipProps} className="h-9 w-9" />
           </Link>
         </div>
         <div className="scrollbar-hide overflow-x-auto border-t border-stone-900/50 pt-3">
@@ -131,4 +165,3 @@ export function DashboardHeader({ userEmail }: DashboardHeaderProps) {
     </header>
   );
 }
-
