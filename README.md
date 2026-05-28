@@ -7,15 +7,15 @@ A meditation web app with a dark, minimal “sanctuary” aesthetic. Guests land
 Add your website screenshots under `public/screenshots/` and update the image paths below.
 
 <p align="center">
-  <!-- Replace with your screenshot -->
-  <img src="public/screenshots/1.png" alt="Welcome" width="900" />
+  <img src="public/screenshots/1.png" alt="Welcome" width="600" />
 </p>
 
+### Sign in & Sign up Page
 <p align="center">
-  <!-- Replace with your screenshot -->
-  <img src="public/screenshots/signin.png" alt="Sign in/Sign up" width="900" />
+  <img src="public/screenshots/signin.png" alt="Sign in/Sign up" width="600" />
 </p>
 
+### Dashboard
 <p align="center">
   <img src="public/screenshots/dashboard.png" alt="Dashboard" width="600" />
 </p>
@@ -24,22 +24,22 @@ Add your website screenshots under `public/screenshots/` and update the image pa
   <img src="public/screenshots/dashboard2.png" alt="Dashboard" width="600" />
 </p>
 
+### Video Detailed Page
 <p align="center">
   <img src="public/screenshots/videopage.png" alt="Video detailed page" width="600" />
 </p>
 
-<p align="center">
-  <img src="public/screenshots/videopage.png" alt="Video detailed page" width="600" />
-</p>
-
+### Timer Page
 <p align="center">
   <img src="public/screenshots/timer.png" alt="Timer" width="600" />
 </p>
 
+### Mixer Page
 <p align="center">
   <img src="public/screenshots/mixer.png" alt="Mixer" width="600" />
 </p>
 
+### Profile Page
 <p align="center">
   <img src="public/screenshots/profile.png" alt="Profile" width="600" />
 </p>
