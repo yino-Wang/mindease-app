@@ -2,10 +2,47 @@
 
 A meditation web app with a dark, minimal “sanctuary” aesthetic. Guests land on a welcome About page; signed-in users get a dashboard, modality libraries, a Zen timer with layered ambient sound, structured courses, and session logging with optional journaling.
 
+## Screenshots
+
+Add your website screenshots under `public/screenshots/` and update the image paths below.
+
 <p align="center">
-  <img src="public/screenshots/welcome.png" alt="MindEase" width="600" />
+  <!-- Replace with your screenshot -->
+  <img src="public/screenshots/1.png" alt="Welcome" width="900" />
 </p>
 
+<p align="center">
+  <!-- Replace with your screenshot -->
+  <img src="public/screenshots/signin.png" alt="Sign in/Sign up" width="900" />
+</p>
+
+<p align="center">
+  <img src="public/screenshots/dashboard.png" alt="Dashboard" width="600" />
+</p>
+
+<p align="center">
+  <img src="public/screenshots/dashboard2.png" alt="Dashboard" width="600" />
+</p>
+
+<p align="center">
+  <img src="public/screenshots/videopage.png" alt="Video detailed page" width="600" />
+</p>
+
+<p align="center">
+  <img src="public/screenshots/videopage.png" alt="Video detailed page" width="600" />
+</p>
+
+<p align="center">
+  <img src="public/screenshots/timer.png" alt="Timer" width="600" />
+</p>
+
+<p align="center">
+  <img src="public/screenshots/mixer.png" alt="Mixer" width="600" />
+</p>
+
+<p align="center">
+  <img src="public/screenshots/profile.png" alt="Profile" width="600" />
+</p>
 Built with **Next.js 16** (App Router), **React 19**, **Tailwind CSS 4**, **Prisma**, and **Supabase** (Auth + PostgreSQL).
 
 ## Features
@@ -13,12 +50,13 @@ Built with **Next.js 16** (App Router), **React 19**, **Tailwind CSS 4**, **Pris
 | Area | Description |
 |------|-------------|
 | **Welcome (`/`)** | Full About experience; guests see **Sign in to explore more** → `/login?next=/dashboard` |
-| **Dashboard** | Top Pick (Daily Zen), Video Spotlight, Made For You, Zen Calendar (practice history) |
+| **Dashboard** | Top Pick (Daily Pick article), Video Spotlight, Made For You, Zen Calendar (practice history), Quote of the Day |
+| **Daily Pick (`/daily-pick`)** | Daily featured article sourced from RSS, rendered in-app with hero image + extracted main content, plus reference link to original |
 | **Zen Timer** | Preset/custom duration, layered ambient mixer (Web Audio API), pause/continue, progress bar, session log + journal modal |
 | **MIXER / MORNINGS / SLEEP** | Category video libraries (YouTube playback) with cover art and intros |
 | **Courses** | 3-day foundation course with day gating and progress |
 | **Daily Zen** | Weekday-themed guided practice |
-| **Profile** | User profile surface |
+| **Profile** | Profile settings (display name/username/avatar, password) |
 | **Auth** | Email/password sign-in, sign-up, magic link via Supabase |
 
 ## Tech stack
@@ -37,6 +75,7 @@ src/
     api/                  # REST: meditate, streaming, courses, ambient-tracks, logs, journal
     auth/                 # callback, signout
     dashboard/            # Home + meditate/play detail
+    daily-pick/           # Daily featured article (extracted from RSS source pages)
     zen-timer/            # Timer tool
     mixer|mornings|sleep/ # Category libraries
     courses|daily|profile/
@@ -45,6 +84,7 @@ src/
   components/             # UI by domain (dashboard, timer, about, courses, streaming, auth)
   hooks/                  # useZenTimer, useAudioMixer, useChime
   lib/                    # Prisma, Supabase, queries, content
+    daily-pick/           # RSS fetch + content extraction (Readability)
 prisma/
   schema.prisma           # Data model
   seed.ts                 # MVP seed data + library sync/cleanup
@@ -60,6 +100,7 @@ public/
 | `/` | Public | Welcome / About |
 | `/login` | Public | Sign in / sign up / magic link |
 | `/dashboard` | Auth | Main hub |
+| `/daily-pick` | Auth | Daily featured article (in-app reader + original link) |
 | `/zen-timer` | Auth | Meditation timer |
 | `/mixer`, `/mornings`, `/sleep` | Auth | Category libraries |
 | `/dashboard/meditate/[id]` | Auth | Library session detail + play |
