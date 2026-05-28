@@ -28,7 +28,12 @@ export function TopPickSection({
         </h2>
       )}
       {item ? (
-        <TopPickHeroCard item={item} layout={isEmbedded ? "split" : "default"} />
+        <div className={isEmbedded ? "min-h-[130px]" : ""}>
+          <TopPickHeroCard
+            item={item}
+            layout={isEmbedded ? "split" : "default"}
+          />
+        </div>
       ) : (
         <div
           className={`flex w-full items-center justify-center border border-stone-800/50 ${CARD_RADIUS_LG} ${CARD_SURFACE} ${isEmbedded ? "min-h-[240px] flex-1" : "aspect-video"}`}

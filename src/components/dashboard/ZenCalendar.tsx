@@ -27,12 +27,12 @@ export function ZenCalendar({ data, todayKey }: ZenCalendarProps) {
   return (
     <div className="flex h-full min-h-0 flex-1 flex-col">
       <div
-        className={`mb-2 grid shrink-0 grid-cols-7 ${MONTH_GRID_GAP} sm:mb-3`}
+        className={`mb-2 grid shrink-0 grid-cols-7 ${MONTH_GRID_GAP} sm:mb-2`}
       >
         {MONTH_WEEKDAY_LABELS.map((label) => (
           <div
             key={label}
-            className="flex items-center justify-center text-[10px] font-medium tracking-wider text-stone-500 uppercase sm:text-xs"
+            className="flex items-center justify-center text-[9px] font-medium tracking-wider text-stone-500 uppercase sm:text-[10px]"
           >
             {label}
           </div>
@@ -55,11 +55,11 @@ export function ZenCalendar({ data, todayKey }: ZenCalendarProps) {
           return (
             <div
               key={cell.date}
-              className={`flex min-h-0 min-w-0 flex-col p-1.5 sm:p-2 ${MONTH_CELL_BASE} ${glowClass} ${!cell.isCurrentMonth ? "opacity-40" : ""} ${isToday ? "ring-1 ring-amber-500/40" : ""}`}
+              className={`flex min-h-0 min-w-0 flex-col p-1 sm:p-1.5 ${MONTH_CELL_BASE} ${glowClass} ${!cell.isCurrentMonth ? "opacity-40" : ""} ${isToday ? "ring-1 ring-amber-500/40" : ""}`}
               title={formatTooltip(cell.date, cell.totalSeconds)}
             >
               <span
-                className={`text-[10px] leading-none sm:text-xs ${cell.isCurrentMonth ? "text-stone-400" : "text-stone-600"}`}
+                className={`text-[9px] leading-none sm:text-[10px] ${cell.isCurrentMonth ? "text-stone-400" : "text-stone-600"}`}
               >
                 {cell.dayOfMonth}
               </span>
@@ -69,7 +69,7 @@ export function ZenCalendar({ data, todayKey }: ZenCalendarProps) {
       </div>
 
       {!hasActivity && (
-        <p className="mt-2 shrink-0 text-[10px] tracking-wide text-stone-600 sm:text-xs">
+        <p className="mt-1.5 shrink-0 text-[10px] tracking-wide text-stone-600 sm:text-xs">
           Your energy glow will appear as you log meditation sessions.
         </p>
       )}

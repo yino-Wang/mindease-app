@@ -27,7 +27,7 @@ export function ZenCalendarSection({ data }: ZenCalendarSectionProps) {
       <div
         className={`flex min-h-[240px] flex-1 flex-col ${CARD_RADIUS_LG} ${CARD_SURFACE} ${CARD_BORDER_ALT} p-3 sm:p-4`}
       >
-        <p className="mb-2 shrink-0 font-serif text-sm tracking-wide text-stone-300 sm:text-base">
+        <p className="mb-1.5 shrink-0 font-serif text-sm tracking-wide text-stone-300 sm:text-sm">
           {data.monthLabel}
         </p>
         <ZenCalendar data={data} todayKey={todayUtcKey()} />

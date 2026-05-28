@@ -5,7 +5,7 @@ export const DASHBOARD_SHELL =
 
 /** Full-bleed main canvas — no max-width constraint */
 export const DASHBOARD_MAIN =
-  "w-full space-y-16 px-6 pt-36 pb-24 sm:px-10 lg:px-12 lg:pt-32";
+  "w-full space-y-24 px-6 pt-36 pb-24 sm:px-10 lg:px-12 lg:pt-32";
 
 export const CARD_SURFACE = "bg-stone-900/40 backdrop-blur-md";
 
@@ -20,7 +20,7 @@ export const CARD_RADIUS_SM = "rounded-xl";
 export const CARD_RADIUS_LG = "rounded-2xl";
 
 /** Fixed width for landscape carousel cards (prevents flex squish) */
-export const CARD_CAROUSEL_WIDTH = "w-[320px] shrink-0";
+export const CARD_CAROUSEL_WIDTH = "w-[400px] shrink-0";
 
 export const CARD_MEDIA_ASPECT = "aspect-video w-full";
 
