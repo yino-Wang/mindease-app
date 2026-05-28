@@ -4,8 +4,6 @@ A meditation web app with a dark, minimal “sanctuary” aesthetic. Guests land
 
 ## Screenshots
 
-Add your website screenshots under `public/screenshots/` and update the image paths below.
-
 <p align="center">
   <img src="public/screenshots/1.png" alt="Welcome" width="600" />
 </p>
