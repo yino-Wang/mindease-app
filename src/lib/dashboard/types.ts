@@ -1,4 +1,4 @@
-export type SpotlightItem = {
+﻿export type SpotlightItem = {
   id: string;
   title: string;
   subtitle: string;
@@ -9,12 +9,25 @@ export type SpotlightItem = {
   rating: number;
 };
 
+export type TopPickKind = "daily_zen" | "article";
+
 export type TopPickItem = {
   id: string;
+  kind: TopPickKind;
   title: string;
   subtitle: string;
-  videoUrl: string | null;
   href: string;
+
+  // Media
+  videoUrl?: string | null;
+  imageUrl?: string | null;
+
+  // Article metadata
+  excerpt?: string;
+  sourceName?: string;
+  referenceUrl?: string;
+
+  // Display metadata
   durationMinutes: number | null;
 };
 
