@@ -1,92 +1,87 @@
 "use client";
 
-import { ProfileAvatar } from "@/components/profile/ProfileAvatar";
-import { ProfileAvatarUpload } from "@/components/profile/ProfileAvatarUpload";
-import { EditUsernameForm } from "@/components/profile/EditUsernameForm";
-import { ChangePasswordForm } from "@/components/profile/ChangePasswordForm";
+import { useCallback, useEffect, useMemo, useState } from "react";
+import { useRouter, useSearchParams } from "next/navigation";
+import { PersonalDetailsSection } from "@/components/profile/PersonalDetailsSection";
+import { ProfileHeader } from "@/components/profile/ProfileHeader";
 import {
-  CARD_BORDER,
-  CARD_RADIUS_LG,
-  CARD_SURFACE,
-} from "@/lib/dashboard/styles";
-import type { ReactNode } from "react";
+  ProfileTabs,
+  type ProfileTab,
+} from "@/components/profile/ProfileTabs";
+import { WatchHistorySection } from "@/components/profile/WatchHistorySection";
 import type { ProfileRecord } from "@/lib/profile/queries";
 import { displayName, getInitials } from "@/lib/profile/queries";
 
 type ProfilePageContentProps = {
   profile: ProfileRecord;
+  initialTab?: ProfileTab;
 };
 
-function Section({
-  title,
-  children,
-}: {
-  title: string;
-  children: ReactNode;
-}) {
-  return (
-    <section
-      className={`${CARD_SURFACE} ${CARD_BORDER} ${CARD_RADIUS_LG} space-y-6 p-6 sm:p-8`}
-    >
-      <h2 className="font-serif text-xl tracking-wide text-stone-200">{title}</h2>
-      {children}
-    </section>
-  );
+function parseTab(value: string | null): ProfileTab {
+  return value === "details" ? "details" : "history";
 }
 
-export function ProfilePageContent({ profile }: ProfilePageContentProps) {
-  const name = displayName(profile.username, profile.email);
-  const initials = getInitials(profile.username, profile.email);
-  const showPassword = profile.authMethod !== "magic_link";
+export function ProfilePageContent({
+  profile,
+  initialTab = "history",
+}: ProfilePageContentProps) {
+  const router = useRouter();
+  const searchParams = useSearchParams();
+  const tabFromUrl = parseTab(searchParams.get("tab"));
+  const [activeTab, setActiveTab] = useState<ProfileTab>(
+    tabFromUrl ?? initialTab
+  );
+
+  useEffect(() => {
+    setActiveTab(tabFromUrl);
+  }, [tabFromUrl]);
+
+  const name = useMemo(
+    () => displayName(profile.username, profile.email),
+    [profile.username, profile.email]
+  );
+  const initials = useMemo(
+    () => getInitials(profile.username, profile.email),
+    [profile.username, profile.email]
+  );
+
+  const handleTabChange = useCallback(
+    (tab: ProfileTab) => {
+      setActiveTab(tab);
+      const params = new URLSearchParams(searchParams.toString());
+      if (tab === "history") {
+        params.delete("tab");
+      } else {
+        params.set("tab", tab);
+      }
+      const query = params.toString();
+      router.replace(query ? `/profile?${query}` : "/profile", { scroll: false });
+    },
+    [router, searchParams]
+  );
 
   return (
-    <div className="mx-auto w-full max-w-xl space-y-8">
-      <section
-        className={`${CARD_SURFACE} ${CARD_BORDER} ${CARD_RADIUS_LG} flex flex-col items-center gap-4 p-8 text-center`}
+    <div className="mx-auto w-full max-w-6xl space-y-8">
+      <ProfileHeader
+        displayName={name}
+        avatarUrl={profile.avatarUrl}
+        initials={initials}
+      />
+
+      <ProfileTabs activeTab={activeTab} onTabChange={handleTabChange} />
+
+      <div
+        id={`profile-panel-${activeTab}`}
+        role="tabpanel"
+        aria-labelledby={`profile-tab-${activeTab}`}
+        className="pt-6"
       >
-        <ProfileAvatar
-          avatarUrl={profile.avatarUrl}
-          initials={initials}
-          size="lg"
-        />
-        <div>
-          <h1 className="font-serif text-3xl tracking-wide text-stone-100">
-            {name}
-          </h1>
-          <p className="mt-2 text-sm tracking-wide text-stone-500">
-            {profile.email}
-          </p>
-        </div>
-      </section>
-
-      <Section title="Edit username">
-        <EditUsernameForm currentUsername={profile.username} />
-      </Section>
-
-      <Section title="Edit avatar">
-        <ProfileAvatarUpload
-          userId={profile.id}
-          avatarUrl={profile.avatarUrl}
-          initials={initials}
-        />
-      </Section>
-
-      {showPassword && (
-        <Section title="Change password">
-          <ChangePasswordForm />
-        </Section>
-      )}
-
-      <section className="flex flex-col items-center gap-4 pt-4 pb-8">
-        <form action="/auth/signout" method="post">
-          <button
-            type="submit"
-            className="rounded-full border border-stone-700/80 bg-stone-900/40 px-10 py-3 text-sm tracking-widest text-stone-400 uppercase transition-all duration-700 ease-in-out hover:border-stone-600 hover:text-stone-200"
-          >
-            Sign out
-          </button>
-        </form>
-      </section>
+        {activeTab === "history" ? (
+          <WatchHistorySection />
+        ) : (
+          <PersonalDetailsSection profile={profile} />
+        )}
+      </div>
     </div>
   );
 }

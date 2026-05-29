@@ -1,3 +1,4 @@
+import { Suspense } from "react";
 import { ProfilePageContent } from "@/components/profile/ProfilePageContent";
 import { DashboardHeader } from "@/components/dashboard/Header";
 import { DashboardViewport } from "@/components/dashboard/DashboardViewport";
@@ -24,7 +25,15 @@ export default async function ProfilePage() {
         />
       }
     >
-      <ProfilePageContent profile={profile} />
+      <Suspense
+        fallback={
+          <div className="mx-auto w-full max-w-6xl py-12 text-center text-sm text-stone-600">
+            Loading profile…
+          </div>
+        }
+      >
+        <ProfilePageContent profile={profile} />
+      </Suspense>
     </DashboardViewport>
   );
 }
