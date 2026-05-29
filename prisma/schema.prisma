@@ -21,6 +21,7 @@ model User {
   updatedAt      DateTime             @updatedAt
   logs           UserMeditationLog[]
   courseProgress UserCourseProgress[]
+  watchHistory   UserWatchHistory[]
 
   @@map("users")
 }
@@ -121,6 +122,25 @@ model StreamingItem {
 
   @@index([sectionType, sortOrder])
   @@map("streaming_items")
+}
+
+// 8. Per-user video watch history (profile Watch History tab)
+model UserWatchHistory {
+  id              String   @id @default(uuid())
+  userId          String
+  user            User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  contentType     String // "STREAMING" | "LIBRARY"
+  contentId       String // streaming_items.id or meditation_audios.id
+  title           String
+  coverUrl        String
+  href            String
+  durationSeconds Int?
+  lastWatchedAt   DateTime @default(now())
+  createdAt       DateTime @default(now())
+
+  @@unique([userId, contentType, contentId])
+  @@index([userId, lastWatchedAt(sort: Desc)])
+  @@map("user_watch_history")
 }
 
 // 7. Zen journal (strict character limit)
