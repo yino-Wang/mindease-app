@@ -37,9 +37,14 @@ export function CinemaPlayer({
   const shouldLoop = sectionType === "MADE_FOR_YOU";
 
   useEffect(() => {
-    if (sectionType === "LIBRARY" || recordedPlay.current) return;
+    if (recordedPlay.current) return;
     recordedPlay.current = true;
-    void fetch(`/api/streaming/${id}/play`, { method: "POST" });
+    const contentType = sectionType === "LIBRARY" ? "LIBRARY" : "STREAMING";
+    void fetch("/api/watch-history", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ contentType, contentId: id }),
+    });
   }, [id, sectionType]);
 
   return (
