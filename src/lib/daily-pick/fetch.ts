@@ -23,6 +23,16 @@ function firstString(value: unknown): string | null {
   return null;
 }
 
+function firstImageFromHtml(html: string | null): string | null {
+  if (!html) return null;
+  // Very small, non-validating extraction. Good enough for RSS snippets.
+  const match = html.match(/<img[^>]+src=["']([^"']+)["']/i);
+  const src = match?.[1]?.trim();
+  if (!src) return null;
+  if (src.startsWith("http://") || src.startsWith("https://")) return src;
+  return null;
+}
+
 function getImageUrl(item: any): string | null {
   const enclosure = item?.enclosure;
   const url = enclosure?.["@_url"] ?? enclosure?.url;
@@ -37,6 +47,14 @@ function getImageUrl(item: any): string | null {
   const thumbUrl =
     (Array.isArray(thumb) ? thumb[0]?.["@_url"] : thumb?.["@_url"]) ?? null;
   if (typeof thumbUrl === "string" && thumbUrl.startsWith("http")) return thumbUrl;
+
+  const desc =
+    firstString(item?.description) ??
+    firstString(item?.summary) ??
+    firstString(item?.["content:encoded"]) ??
+    null;
+  const firstImg = firstImageFromHtml(desc);
+  if (firstImg) return firstImg;
 
   return null;
 }
