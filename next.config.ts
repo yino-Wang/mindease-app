@@ -1,7 +1,7 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
-  transpilePackages: ['jsdom', '@mozilla/readability'],
+  transpilePackages: ['@exodus/bytes'],
   serverExternalPackages: ['jsdom'],
   images: {
     remotePatterns: [
