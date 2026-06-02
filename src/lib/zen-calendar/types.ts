@@ -15,4 +15,5 @@ export type ZenCalendarData = {
   year: number;
   month: number;
   totalSessions: number;
+  notesByDate: Record<string, string>;
 };

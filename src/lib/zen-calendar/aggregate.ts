@@ -1,5 +1,6 @@
 import { prisma } from "@/lib/prisma";
 import { GLOW_THRESHOLDS } from "@/lib/zen-calendar/constants";
+import { getCalendarNotesForMonth } from "@/lib/zen-calendar/notes";
 import type { GlowLevel, ZenCalendarCell, ZenCalendarData } from "@/lib/zen-calendar/types";
 
 function toDateKey(date: Date): string {
@@ -44,7 +45,7 @@ export function getMonthGridStart(year: number, month: number): Date {
   return addUtcDays(firstOfMonth, -mondayOffset);
 }
 
-function getMonthGridRange(year: number, month: number) {
+export function getMonthGridRange(year: number, month: number) {
   const gridStart = getMonthGridStart(year, month);
   const lastOfMonth = new Date(Date.UTC(year, month, 0));
   const daysUntilSunday = (7 - lastOfMonth.getUTCDay()) % 7;
@@ -117,6 +118,7 @@ export async function getZenCalendarData(
   }
 
   const { cells, rowCount } = buildMonthGrid(dailyTotals, year, month);
+  const notesByDate = await getCalendarNotesForMonth(userId, year, month);
 
   return {
     cells,
@@ -125,5 +127,6 @@ export async function getZenCalendarData(
     year,
     month,
     totalSessions: logs.length,
+    notesByDate,
   };
 }
