@@ -1,7 +1,7 @@
 import { PrismaClient } from "@prisma/client";
 
 /** Bump when Prisma schema changes so dev hot-reload picks up a fresh client. */
-const PRISMA_CACHE_VERSION = 3;
+const PRISMA_CACHE_VERSION = 4;
 
 const globalForPrisma = globalThis as unknown as {
   prisma: PrismaClient | undefined;
@@ -34,6 +34,7 @@ function getPrisma(): PrismaClient {
     versionOk &&
     "streamingItem" in cached &&
     "videoComment" in cached &&
+    "zenCalendarNote" in cached &&
     meditationAudioHasLibraryFields(cached)
   ) {
     return cached;
@@ -51,4 +52,4 @@ function getPrisma(): PrismaClient {
   return client;
 }
 
-export const prisma = getPrisma();
+export const prisma: PrismaClient = getPrisma();
