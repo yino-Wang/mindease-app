@@ -1,12 +1,13 @@
 import { NextResponse } from "next/server";
 
 export const runtime = "nodejs";
+export const dynamic = "force-dynamic";
 
 export async function GET() {
   const databaseUrl = process.env.DATABASE_URL;
   const directUrl = process.env.DIRECT_URL;
 
-  return NextResponse.json({
+  const res = NextResponse.json({
     ok: true,
     nodeEnv: process.env.NODE_ENV ?? null,
     vercelEnv: process.env.VERCEL_ENV ?? null,
@@ -19,5 +20,7 @@ export async function GET() {
     databaseUrlStartsWith: databaseUrl ? databaseUrl.slice(0, 14) : null, // "postgresql://"
     directUrlStartsWith: directUrl ? directUrl.slice(0, 14) : null,
   });
+  res.headers.set("Cache-Control", "no-store, max-age=0");
+  return res;
 }
 
