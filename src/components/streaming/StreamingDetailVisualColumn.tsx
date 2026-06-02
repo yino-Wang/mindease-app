@@ -1,5 +1,6 @@
 import Image from "next/image";
 import Link from "next/link";
+import { VideoCommentsSection } from "@/components/streaming/VideoCommentsSection";
 import { formatPlayCount } from "@/lib/streaming/queries";
 import type { StreamingItemRecord } from "@/lib/streaming/types";
 
@@ -67,6 +68,8 @@ export function StreamingDetailVisualColumn({
           ← Back to dashboard
         </Link>
       </div>
+
+      <VideoCommentsSection mediaId={item.id} />
     </div>
   );
 }
