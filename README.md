@@ -8,6 +8,14 @@ A meditation web app with a dark, minimal “sanctuary” aesthetic. Guests land
   <img src="public/screenshots/1.png" alt="Welcome" width="600" />
 </p>
 
+<p align="center">
+  <img src="public/screenshots/welcome2.png" alt="Welcome" width="600" />
+</p>
+
+<p align="center">
+  <img src="public/screenshots/welcome3.png" alt="Welcome" width="600" />
+</p>
+
 ### Sign in & Sign up Page
 <p align="center">
   <img src="public/screenshots/signin.png" alt="Sign in/Sign up" width="600" />
@@ -52,13 +60,14 @@ Built with **Next.js 16** (App Router), **React 19**, **Tailwind CSS 4**, **Pris
 | Area | Description |
 |------|-------------|
 | **Welcome (`/`)** | Full About experience; guests see **Sign in to explore more** → `/login?next=/dashboard` |
-| **Dashboard** | Top Pick (Daily Pick article), Video Spotlight, Made For You, Zen Calendar (practice history), Quote of the Day |
+| **Dashboard** | Top Pick (Daily Pick article), Video Spotlight, Made For You, Zen Calendar (practice history + per-day notes), Quote of the Day |
 | **Daily Pick (`/daily-pick`)** | Daily featured article sourced from RSS, rendered in-app with hero image + extracted main content, plus reference link to original |
 | **Zen Timer** | Preset/custom duration, layered ambient mixer (Web Audio API), pause/continue, progress bar, session log + journal modal |
 | **MIXER / MORNINGS / SLEEP** | Category video libraries (YouTube playback) with cover art and intros |
 | **Courses** | 3-day foundation course with day gating and progress |
 | **Daily Zen** | Weekday-themed guided practice |
-| **Profile** | Profile settings (display name/username/avatar, password) |
+| **Video detail** | Leave comments under sessions (name + avatar + comment body) |
+| **Profile** | Profile settings (display name/username/avatar, password) + Watch History grid |
 | **Auth** | Email/password sign-in, sign-up, magic link via Supabase |
 
 ## Tech stack
@@ -86,7 +95,10 @@ src/
   components/             # UI by domain (dashboard, timer, about, courses, streaming, auth)
   hooks/                  # useZenTimer, useAudioMixer, useChime
   lib/                    # Prisma, Supabase, queries, content
+    comments/             # Video detail comments
     daily-pick/           # RSS fetch + content extraction (Readability)
+    watch-history/        # Watch history queries/types
+    zen-calendar/         # Calendar aggregation + notes
 prisma/
   schema.prisma           # Data model
   seed.ts                 # MVP seed data + library sync/cleanup
@@ -194,6 +206,9 @@ Dashboard streaming (Spotlight / Made For You) and course/daily content are also
 
 - `GET /api/meditate?category=` — category library cards
 - `GET /api/streaming`, `GET /api/streaming/[id]` — streaming catalog
+- `GET /api/watch-history`, `POST /api/watch-history` — profile watch history + play tracking
+- `GET /api/media/[id]/comments`, `POST /api/media/[id]/comments` — video detail comments
+- `PUT /api/zen-calendar/notes` — save per-day Zen Calendar note
 - `POST /api/meditate/log` — log timer/course sessions
 - `POST /api/meditate/journal` — attach journal to a log
 - `GET /api/ambient-tracks` — Zen Timer soundscape layers
