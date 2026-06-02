@@ -39,7 +39,11 @@ A meditation web app with a dark, minimal “sanctuary” aesthetic. Guests land
 
 ### Profile Page
 <p align="center">
-  <img src="public/screenshots/profile.png" alt="Profile" width="600" />
+  <img src="public/screenshots/profile1.png" alt="Profile" width="600" />
+</p>
+
+<p align="center">
+  <img src="public/screenshots/profile 2.png" alt="Profile" width="600" />
 </p>
 Built with **Next.js 16** (App Router), **React 19**, **Tailwind CSS 4**, **Prisma**, and **Supabase** (Auth + PostgreSQL).
 

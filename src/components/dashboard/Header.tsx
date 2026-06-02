@@ -76,7 +76,7 @@ function NavItem({
       className={tabClass}
       aria-current={active ? "page" : undefined}
     >
-      <span className="text-xs font-semibold tracking-widest uppercase">
+      <span className="text-lg font-semibold tracking-widest uppercase">
         {item.label}
       </span>
       {underline}
@@ -117,7 +117,7 @@ export function DashboardHeader({
         <div className="flex items-center justify-start">
           <Link
             href={homeHref}
-            className={`font-serif text-xl font-semibold tracking-[0.15em] transition-opacity duration-700 hover:opacity-90 ${FOCUS_RING}`}
+            className={`font-serif text-3xl font-semibold tracking-[0.15em] transition-opacity duration-700 hover:opacity-90 ${FOCUS_RING}`}
           >
             <span className="bg-gradient-to-r from-stone-100 via-amber-200 to-amber-400 bg-clip-text text-transparent">
               MindEase

@@ -37,14 +37,14 @@ export function AboutPageContent({
           src={ABOUT_HERO.image}
           alt={ABOUT_HERO.imageAlt}
           priority
-          className="object-cover object-center opacity-70"
+          className="object-cover object-center opacity-100"
         />
         <div
-          className="absolute inset-0 bg-gradient-to-r from-[#0D0E0E] via-[#0D0E0E]/92 to-[#0D0E0E]/55"
+          className="absolute inset-0 bg-gradient-to-r from-[#0D0E0E] via-[#0D0E0E]/70 to-[#0D0E0E]/55"
           aria-hidden
         />
         <div
-          className="absolute inset-0 bg-gradient-to-t from-[#0D0E0E] via-transparent to-[#0D0E0E]/40"
+          className="absolute inset-0 bg-gradient-to-t from-[#0D0E0E] via-transparent to-[#0D0E0E]/20"
           aria-hidden
         />
 
