@@ -3,7 +3,7 @@
 A meditation web app with a dark, minimal “sanctuary” aesthetic. Guests land on a welcome About page; signed-in users get a dashboard, modality libraries, a Zen timer with layered ambient sound, structured courses, and session logging with optional journaling.
 
 ## Screenshots
-
+### Welcome Page
 <p align="center">
   <img src="public/screenshots/1.png" alt="Welcome" width="600" />
 </p>
@@ -32,7 +32,7 @@ A meditation web app with a dark, minimal “sanctuary” aesthetic. Guests land
 
 ### Video Detailed Page
 <p align="center">
-  <img src="public/screenshots/videopage.png" alt="Video detailed page" width="600" />
+  <img src="public/screenshots/videoPage.png" alt="Video detailed page" width="600" />
 </p>
 
 ### Timer Page
