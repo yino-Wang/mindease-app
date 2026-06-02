@@ -3,6 +3,8 @@ import { getAuthUser, UnauthorizedError } from "@/lib/auth/session";
 import { prisma } from "@/lib/prisma";
 import { createZenJournalSchema } from "@/lib/validation/meditate";
 
+export const runtime = "nodejs";
+
 export async function POST(request: NextRequest) {
   try {
     const authUser = await getAuthUser();

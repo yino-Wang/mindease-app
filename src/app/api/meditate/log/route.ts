@@ -4,6 +4,8 @@ import { ensureUser } from "@/lib/auth/ensure-user";
 import { prisma } from "@/lib/prisma";
 import { createMeditationLogSchema } from "@/lib/validation/meditate";
 
+export const runtime = "nodejs";
+
 export async function POST(request: NextRequest) {
   try {
     const authUser = await getAuthUser();
