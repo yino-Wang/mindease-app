@@ -1,5 +1,4 @@
 import { Readability } from "@mozilla/readability";
-import { JSDOM } from "jsdom";
 
 export type ExtractedArticle = {
   contentText: string | null;
@@ -24,6 +23,9 @@ function firstMetaContent(doc: Document, selectors: string[]): string | null {
 export async function extractArticleFromUrl(
   url: string
 ): Promise<ExtractedArticle> {
+  // jsdom is ESM; use dynamic import so Node can load it correctly in all runtimes (e.g. Vercel).
+  const { JSDOM } = await import("jsdom");
+
   const res = await fetch(url, {
     next: { revalidate: 3600 },
     headers: {
