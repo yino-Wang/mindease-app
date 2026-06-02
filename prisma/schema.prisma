@@ -22,6 +22,7 @@ model User {
   logs           UserMeditationLog[]
   courseProgress UserCourseProgress[]
   watchHistory   UserWatchHistory[]
+  videoComments  VideoComment[]
 
   @@map("users")
 }
@@ -141,6 +142,20 @@ model UserWatchHistory {
   @@unique([userId, contentType, contentId])
   @@index([userId, lastWatchedAt(sort: Desc)])
   @@map("user_watch_history")
+}
+
+// 9. Comments on video / library detail pages
+model VideoComment {
+  id          String   @id @default(uuid())
+  userId      String
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  contentType String // "STREAMING" | "LIBRARY"
+  contentId   String
+  body        String   @db.Text
+  createdAt   DateTime @default(now())
+
+  @@index([contentType, contentId, createdAt(sort: Desc)])
+  @@map("video_comments")
 }
 
 // 7. Zen journal (strict character limit)
