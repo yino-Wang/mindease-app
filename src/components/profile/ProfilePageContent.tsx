@@ -10,7 +10,7 @@ import {
 } from "@/components/profile/ProfileTabs";
 import { WatchHistorySection } from "@/components/profile/WatchHistorySection";
 import type { ProfileRecord } from "@/lib/profile/queries";
-import { displayName, getInitials } from "@/lib/profile/queries";
+import { displayName, getInitials } from "@/lib/profile/utils";
 
 type ProfilePageContentProps = {
   profile: ProfileRecord;

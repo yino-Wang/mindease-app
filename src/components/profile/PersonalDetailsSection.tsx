@@ -8,7 +8,7 @@ import {
   CARD_SURFACE,
 } from "@/lib/dashboard/styles";
 import type { ProfileRecord } from "@/lib/profile/queries";
-import { getInitials } from "@/lib/profile/queries";
+import { getInitials } from "@/lib/profile/utils";
 
 type PersonalDetailsSectionProps = {
   profile: ProfileRecord;

@@ -7,7 +7,7 @@ import {
   DASHBOARD_NAV_ITEMS,
   isNavItemActive,
 } from "@/lib/dashboard/nav";
-import { getInitials } from "@/lib/profile/queries";
+import { getInitials } from "@/lib/profile/utils";
 import { FOCUS_RING } from "@/lib/dashboard/styles";
 
 type DashboardHeaderProps = {

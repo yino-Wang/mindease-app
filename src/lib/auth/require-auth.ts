@@ -1,6 +1,6 @@
 import { redirect } from "next/navigation";
 import { ensureUser } from "@/lib/auth/ensure-user";
-import { displayName } from "@/lib/profile/queries";
+import { displayName } from "@/lib/profile/utils";
 import { prisma } from "@/lib/prisma";
 import { createClient } from "@/lib/supabase/server";
 

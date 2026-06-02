@@ -1,5 +1,5 @@
 import { prisma } from "@/lib/prisma";
-import { displayName, getInitials } from "@/lib/profile/queries";
+import { displayName, getInitials } from "@/lib/profile/utils";
 import type {
   VideoCommentContentType,
   VideoCommentItem,

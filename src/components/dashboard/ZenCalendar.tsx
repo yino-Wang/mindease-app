@@ -8,7 +8,7 @@ import {
   MONTH_GRID_GAP,
   MONTH_WEEKDAY_LABELS,
 } from "@/lib/zen-calendar/constants";
-import { MAX_CALENDAR_NOTE_LENGTH } from "@/lib/zen-calendar/notes";
+import { MAX_CALENDAR_NOTE_LENGTH } from "@/lib/zen-calendar/notes-utils";
 import type { ZenCalendarCell, ZenCalendarData } from "@/lib/zen-calendar/types";
 
 type ZenCalendarProps = {

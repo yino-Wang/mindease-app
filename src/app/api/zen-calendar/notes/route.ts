@@ -4,9 +4,9 @@ import { getAuthUser, UnauthorizedError } from "@/lib/auth/session";
 import { ensureUser } from "@/lib/auth/ensure-user";
 import {
   isValidDateKey,
-  upsertCalendarNote,
   validateCalendarNote,
-} from "@/lib/zen-calendar/notes";
+} from "@/lib/zen-calendar/notes-utils";
+import { upsertCalendarNote } from "@/lib/zen-calendar/notes";
 
 export const runtime = "nodejs";
 
