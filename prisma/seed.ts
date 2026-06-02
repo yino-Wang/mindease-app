@@ -1,4 +1,4 @@
-import "dotenv/config";
+﻿import "dotenv/config";
 import fs from "node:fs";
 import path from "node:path";
 import { PrismaClient } from "@prisma/client";
@@ -555,24 +555,6 @@ const SPOTLIGHT_ITEMS = [
     sortOrder: 3,
     tags: ["Mind", "Reprogramming", "Release"],
   },
-  {
-    title: "20 Min Vagus Nerve Meditation",
-    description:
-      `This 20-minute Vagus Nerve meditation is a self-soothing technique to help with managing stress and anxiety. Chibs Okereke is a certified clinical hypnotherapist, mindfulness facilitator, and narrator on the Calm app, and he has designed this meditation to rejuvenate your nervous system and alleviate stress. 
-
-      This guided meditation focuses on stimulating the Vagus Nerve, a key element in managing your body's relaxation response. Through a series of gentle breathing techniques and progressive relaxation exercises, you'll experience a significant reduction in stress levels, an easing of bodily tension, and an overall improvement in well-being. This meditation offers a science-supported approach to not only calm your mind in the here and now but also to enhance your resilience against future stressors. Ideal for professionals seeking a practical way to maintain mental clarity and emotional balance in a demanding environment.
-
-      🛌Sleep is not a luxury. It’s the foundation of emotional balance, mental clarity, physical repair, and nervous system regulation. Yet around 1 in 3 adults struggle to get enough sleep, leaving their bodies stuck in stress mode long after the day has ended.
-      This channel exists to offer a gentler alternative, science-informed sleep meditations and hypnosis designed to help your nervous system feel safe enough to switch off. Each session is created to support deep rest without pressure, effort, or performance. Just space to soften, settle, and let sleep come naturally.`,
-    author: "MindEase Studio",
-    coverUrl: "/cover/M5.png",
-    mediaUrl: "https://www.youtube.com/watch?v=srjmofeFC2s",
-    duration: 450,
-    rating: 4.74,
-    playCount: 4588,
-    sortOrder: 2,
-    tags: ["Vagus Nerve", "Reset", "Nervous System"],
-  },
 ] as const;
 
 const MADE_FOR_YOU_ITEMS = [
@@ -1036,17 +1018,19 @@ async function cleanupStreamingCatalog(): Promise<number> {
 
   const rows = await prisma.streamingItem.findMany({
     where: { sectionType: { in: [...STREAMING_SECTIONS] } },
-    select: { id: true, title: true, sectionType: true },
+    select: { id: true, title: true, sectionType: true, coverUrl: true },
   });
 
   let removed = 0;
   for (const row of rows) {
     const inSeed =
       seedTitlesBySection.get(row.sectionType)?.has(row.title) ?? false;
-    if (!inSeed) {
+    const hasCover = publicCoverExists(row.coverUrl);
+    if (!inSeed || !hasCover) {
       await prisma.streamingItem.delete({ where: { id: row.id } });
+      const reason = !inSeed ? "not in seed" : "missing cover file";
       console.log(
-        `  remove streaming [${row.sectionType}]: ${row.title} (not in seed)`
+        `  remove streaming [${row.sectionType}]: ${row.title} (${reason})`
       );
       removed++;
     }
