@@ -155,6 +155,20 @@ CHIME_AUDIO_URL=
 
 See [`src/app/docs/auth-setup.md`](src/app/docs/auth-setup.md) for Supabase dashboard settings (redirect URLs, email provider).
 
+## Deploying to Vercel
+
+Vercel does **not** read your local `.env` file. You must add the same variables in:
+
+- **Project Settings → Environment Variables**
+
+At minimum, set:
+
+- `DATABASE_URL`
+- `DIRECT_URL` (recommended)
+- `NEXT_PUBLIC_SUPABASE_URL`
+- `NEXT_PUBLIC_SUPABASE_ANON_KEY`
+- `NEXT_PUBLIC_SITE_URL` (your production URL)
+
 ## Getting started
 
 ```bash

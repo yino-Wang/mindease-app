@@ -8,7 +8,16 @@ const globalForPrisma = globalThis as unknown as {
   prismaCacheVersion?: number;
 };
 
+function assertDatabaseEnv() {
+  if (!process.env.DATABASE_URL) {
+    throw new Error(
+      "Missing DATABASE_URL. Add it to your environment variables (locally: .env, on Vercel: Project Settings → Environment Variables).",
+    );
+  }
+}
+
 function createPrismaClient() {
+  assertDatabaseEnv();
   return new PrismaClient({
     log: process.env.NODE_ENV === "development" ? ["error", "warn"] : ["error"],
   });
