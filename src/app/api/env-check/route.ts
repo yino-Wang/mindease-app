@@ -9,6 +9,8 @@ export async function GET() {
   return NextResponse.json({
     ok: true,
     nodeEnv: process.env.NODE_ENV ?? null,
+    vercelEnv: process.env.VERCEL_ENV ?? null,
+    vercelGitCommitSha: process.env.VERCEL_GIT_COMMIT_SHA ?? null,
     hasDatabaseUrl: Boolean(databaseUrl),
     hasDirectUrl: Boolean(directUrl),
     // Helps detect accidental quotes/whitespace without leaking secrets
