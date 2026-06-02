@@ -23,6 +23,8 @@ export const metadata: Metadata = {
   description: "An immersive meditation sanctuary",
 };
 
+export const runtime = "nodejs";
+
 export default function RootLayout({
   children,
 }: Readonly<{
