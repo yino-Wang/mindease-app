@@ -7,6 +7,8 @@ import {
   recordWatchHistory,
 } from "@/lib/watch-history/queries";
 
+export const runtime = "nodejs";
+
 const postSchema = z.object({
   contentType: z.enum(["STREAMING", "LIBRARY"]),
   contentId: z.string().uuid(),

@@ -3,6 +3,8 @@ import { getAuthUser, UnauthorizedError } from "@/lib/auth/session";
 import { ensureUser } from "@/lib/auth/ensure-user";
 import { getTodayDailyZen } from "@/lib/daily-zen/resolve";
 
+export const runtime = "nodejs";
+
 export async function GET() {
   try {
     const authUser = await getAuthUser();

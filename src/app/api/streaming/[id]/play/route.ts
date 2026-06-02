@@ -3,6 +3,8 @@ import { getAuthUser, UnauthorizedError } from "@/lib/auth/session";
 import { ensureUser } from "@/lib/auth/ensure-user";
 import { incrementStreamingPlayCount } from "@/lib/streaming/queries";
 
+export const runtime = "nodejs";
+
 type RouteContext = { params: Promise<{ id: string }> };
 
 export async function POST(_request: Request, context: RouteContext) {

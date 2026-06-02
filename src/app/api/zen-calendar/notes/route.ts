@@ -8,6 +8,8 @@ import {
   validateCalendarNote,
 } from "@/lib/zen-calendar/notes";
 
+export const runtime = "nodejs";
+
 const putSchema = z.object({
   date: z.string(),
   body: z.string().max(500),

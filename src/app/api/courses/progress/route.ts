@@ -4,6 +4,8 @@ import { ensureUser } from "@/lib/auth/ensure-user";
 import { completeCourseDay } from "@/lib/courses/queries";
 import { completeCourseDaySchema } from "@/lib/validation/courses";
 
+export const runtime = "nodejs";
+
 export async function POST(request: NextRequest) {
   try {
     const authUser = await getAuthUser();

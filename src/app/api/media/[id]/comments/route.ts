@@ -9,6 +9,8 @@ import {
 } from "@/lib/comments/queries";
 import { resolveCommentTarget } from "@/lib/comments/resolve-content";
 
+export const runtime = "nodejs";
+
 type RouteContext = { params: Promise<{ id: string }> };
 
 const postSchema = z.object({

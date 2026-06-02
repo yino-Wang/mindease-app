@@ -4,6 +4,8 @@ import { ensureUser } from "@/lib/auth/ensure-user";
 import { getStreamingItemsBySection } from "@/lib/streaming/queries";
 import type { StreamingSectionType } from "@/lib/streaming/types";
 
+export const runtime = "nodejs";
+
 const VALID_SECTIONS = new Set<StreamingSectionType>([
   "SPOTLIGHT",
   "MADE_FOR_YOU",

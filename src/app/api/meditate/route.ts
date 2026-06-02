@@ -3,6 +3,8 @@ import { z } from "zod";
 import { LIBRARY_CATEGORIES } from "@/lib/meditate/categories";
 import { getLibraryItemsByCategory } from "@/lib/meditate/queries";
 
+export const runtime = "nodejs";
+
 const querySchema = z.object({
   category: z.enum(LIBRARY_CATEGORIES),
 });

@@ -3,6 +3,8 @@ import { getAuthUser, UnauthorizedError } from "@/lib/auth/session";
 import { ensureUser } from "@/lib/auth/ensure-user";
 import { getCourseCatalog } from "@/lib/courses/queries";
 
+export const runtime = "nodejs";
+
 export async function GET() {
   try {
     const authUser = await getAuthUser();
