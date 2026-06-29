@@ -33,6 +33,16 @@ export default async function LoginPage({ searchParams }: LoginPageProps) {
           </p>
         )}
 
+        {params.error === "profile_setup_failed" && (
+          <p className="text-sm text-amber-600/90" role="alert">
+            Your account was created, but we could not set up your profile.
+            This is usually a database connection or schema issue. Check{" "}
+            <code className="text-stone-400">DATABASE_URL</code> on Vercel and
+            run <code className="text-stone-400">npm run db:push</code> on your
+            Supabase database.
+          </p>
+        )}
+
         <LoginForm next={next} />
       </main>
     </div>

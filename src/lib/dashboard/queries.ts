@@ -1,5 +1,5 @@
 ﻿import { getFoundationCourse } from "@/lib/courses/queries";
-import { getDailyPickArticle } from "@/lib/daily-pick/resolve";
+import { getDailyPickArticleForDashboard } from "@/lib/daily-pick/resolve";
 import { fetchDailyQuote } from "@/lib/quotes/fetch-daily-quote";
 import { getStreamingItemsBySection } from "@/lib/streaming/queries";
 import { getZenCalendarData } from "@/lib/zen-calendar/aggregate";
@@ -20,9 +20,8 @@ export async function getDashboardContent(
       getStreamingItemsBySection("SPOTLIGHT"),
       getStreamingItemsBySection("MADE_FOR_YOU"),
       fetchDailyQuote(),
-      // Avoid expensive external HTML extraction on dashboard.
-      // Full content + og:image extraction happens on /daily-pick instead.
-      getDailyPickArticle(),
+      // Fetch original article og:image only (fast); full text on /daily-pick.
+      getDailyPickArticleForDashboard(),
     ]);
 
   const courseId = course?.id ?? null;

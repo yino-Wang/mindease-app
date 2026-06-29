@@ -13,6 +13,7 @@
    * Enriched from fetching the actual article page (optional).
    * Kept optional so RSS-only items remain valid.
    */
+  contentHtml?: string | null;
   contentText?: string | null;
   heroImageUrl?: string | null;
 };

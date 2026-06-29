@@ -1,7 +1,7 @@
 "use server";
 
 import { redirect } from "next/navigation";
-import { ensureUser } from "@/lib/auth/ensure-user";
+import { EnsureUserError, ensureUser } from "@/lib/auth/ensure-user";
 import { createClient } from "@/lib/supabase/server";
 
 export type AuthActionState = {
@@ -38,12 +38,20 @@ export async function signIn(
     return { error: error.message };
   }
 
-  if (data.user) {
-    await ensureUser({
-      id: data.user.id,
-      email: data.user.email,
-      authMethod: "password",
-    });
+  if (data.user?.email) {
+    try {
+      await ensureUser({
+        id: data.user.id,
+        email: data.user.email,
+        authMethod: "password",
+      });
+    } catch (error) {
+      const message =
+        error instanceof EnsureUserError
+          ? error.message
+          : "Could not set up your profile. Please try again.";
+      return { error: message };
+    }
   }
 
   redirect(next ?? "/dashboard");
@@ -78,12 +86,20 @@ export async function signUp(
     return { error: error.message };
   }
 
-  if (data.user) {
-    await ensureUser({
-      id: data.user.id,
-      email: data.user.email,
-      authMethod: "password",
-    });
+  if (data.user?.email) {
+    try {
+      await ensureUser({
+        id: data.user.id,
+        email: data.user.email,
+        authMethod: "password",
+      });
+    } catch (error) {
+      const message =
+        error instanceof EnsureUserError
+          ? error.message
+          : "Account created in auth, but profile setup failed. Try signing in.";
+      return { error: message };
+    }
   }
 
   if (data.session) {

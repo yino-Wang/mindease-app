@@ -1,4 +1,5 @@
 ﻿import Link from "next/link";
+import { DailyPickArticleBody } from "@/components/daily-pick/DailyPickArticleBody";
 import type { DailyPickArticle } from "@/lib/daily-pick/types";
 import {
   CARD_BORDER,
@@ -25,8 +26,6 @@ function formatPublished(date: string | null): string | null {
 export function DailyPickArticlePage({ article }: DailyPickArticlePageProps) {
   const publishedLabel = formatPublished(article.publishedAt);
   const heroImageUrl = article.heroImageUrl ?? article.imageUrl ?? null;
-  const contentText = article.contentText?.trim() ? article.contentText : null;
-  const paragraphs = contentText ? contentText.split(/\n{2,}/g) : [];
 
   return (
     <div className="w-full max-w-none space-y-10">
@@ -86,22 +85,11 @@ export function DailyPickArticlePage({ article }: DailyPickArticlePageProps) {
             <p className="text-sm tracking-[0.25em] text-stone-500 uppercase">
               Story
             </p>
-            {paragraphs.length > 0 ? (
-              <div className="space-y-5">
-                {paragraphs.map((p, idx) => (
-                  <p
-                    key={`${article.id}-${idx}`}
-                    className="text-base leading-relaxed tracking-wide text-stone-300 sm:text-lg"
-                  >
-                    {p}
-                  </p>
-                ))}
-              </div>
-            ) : (
-              <p className="text-base leading-relaxed tracking-wide text-stone-300 sm:text-lg">
-                {article.excerpt}
-              </p>
-            )}
+            <DailyPickArticleBody
+              contentHtml={article.contentHtml}
+              contentText={article.contentText}
+              excerpt={article.excerpt}
+            />
           </section>
         </article>
       </div>

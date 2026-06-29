@@ -23,7 +23,11 @@ export async function requireAuth(nextPath: string): Promise<AuthSessionUser> {
     redirect(`/login?next=${encodeURIComponent(nextPath)}`);
   }
 
-  await ensureUser({ id: user.id, email: user.email });
+  try {
+    await ensureUser({ id: user.id, email: user.email });
+  } catch {
+    redirect(`/login?error=profile_setup_failed&next=${encodeURIComponent(nextPath)}`);
+  }
 
   const profile = await prisma.user.findUnique({
     where: { id: user.id },

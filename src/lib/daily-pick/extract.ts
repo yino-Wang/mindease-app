@@ -1,14 +1,68 @@
 import { Readability } from "@mozilla/readability";
 
 export type ExtractedArticle = {
+  contentHtml: string | null;
   contentText: string | null;
   heroImageUrl: string | null;
 };
+
+const ARTICLE_FETCH_HEADERS = {
+  "User-Agent":
+    "Mozilla/5.0 (compatible; MindEaseBot/1.0; +https://example.invalid/bot)",
+  Accept: "text/html,application/xhtml+xml",
+};
+
+function heroImageFromHtml(html: string): string | null {
+  const patterns = [
+    /<meta[^>]*property=["']og:image(?::secure_url)?["'][^>]*content=["']([^"']+)["'][^>]*>/i,
+    /<meta[^>]*content=["']([^"']+)["'][^>]*property=["']og:image(?::secure_url)?["'][^>]*>/i,
+    /<meta[^>]*name=["']twitter:image["'][^>]*content=["']([^"']+)["'][^>]*>/i,
+    /<meta[^>]*content=["']([^"']+)["'][^>]*name=["']twitter:image["'][^>]*>/i,
+  ];
+
+  for (const pattern of patterns) {
+    const match = html.match(pattern);
+    const url = match?.[1]?.trim();
+    if (url?.startsWith("http")) return url;
+  }
+
+  return null;
+}
+
+/** Lightweight hero fetch for dashboard cards (no Readability/jsdom). */
+export async function extractHeroImageFromUrl(
+  url: string
+): Promise<string | null> {
+  try {
+    const res = await fetch(url, {
+      next: { revalidate: 3600 },
+      headers: ARTICLE_FETCH_HEADERS,
+    });
+    if (!res.ok) return null;
+    const html = await res.text();
+    return heroImageFromHtml(html);
+  } catch {
+    return null;
+  }
+}
 
 function cleanText(input: string | null | undefined): string | null {
   if (!input) return null;
   const normalized = input.replace(/\r\n/g, "\n").replace(/\n{3,}/g, "\n\n").trim();
   return normalized.length > 0 ? normalized : null;
+}
+
+/** Readability output is pre-sanitized; ensure external links open safely. */
+function enhanceArticleHtml(html: string | null | undefined): string | null {
+  if (!html?.trim()) return null;
+  return html.replace(/<a\b([^>]*)>/gi, (_match, attrs: string) => {
+    const hasTarget = /\btarget\s*=/i.test(attrs);
+    const hasRel = /\brel\s*=/i.test(attrs);
+    let next = attrs;
+    if (!hasTarget) next += ' target="_blank"';
+    if (!hasRel) next += ' rel="noopener noreferrer"';
+    return `<a${next}>`;
+  });
 }
 
 function firstMetaContent(doc: Document, selectors: string[]): string | null {
@@ -28,16 +82,11 @@ export async function extractArticleFromUrl(
 
   const res = await fetch(url, {
     next: { revalidate: 3600 },
-    headers: {
-      // Helps some sites return the "real" page markup.
-      "User-Agent":
-        "Mozilla/5.0 (compatible; MindEaseBot/1.0; +https://example.invalid/bot)",
-      Accept: "text/html,application/xhtml+xml",
-    },
+    headers: ARTICLE_FETCH_HEADERS,
   });
 
   if (!res.ok) {
-    return { contentText: null, heroImageUrl: null };
+    return { contentHtml: null, contentText: null, heroImageUrl: null };
   }
 
   const html = await res.text();
@@ -54,8 +103,9 @@ export async function extractArticleFromUrl(
     ]) ?? null;
 
   const parsed = new Readability(doc).parse();
+  const contentHtml = enhanceArticleHtml(parsed?.content ?? null);
   const contentText = cleanText(parsed?.textContent ?? null);
 
-  return { contentText, heroImageUrl };
+  return { contentHtml, contentText, heroImageUrl };
 }
 

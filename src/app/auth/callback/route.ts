@@ -2,6 +2,8 @@ import { NextResponse } from "next/server";
 import { ensureUser } from "@/lib/auth/ensure-user";
 import { createClient } from "@/lib/supabase/server";
 
+export const runtime = "nodejs";
+
 export async function GET(request: Request) {
   const { searchParams, origin } = new URL(request.url);
   const code = searchParams.get("code");
@@ -16,15 +18,21 @@ export async function GET(request: Request) {
         data: { user },
       } = await supabase.auth.getUser();
 
-      if (user) {
-        const type = searchParams.get("type");
-        const authMethod =
-          type === "magiclink" ? ("magic_link" as const) : undefined;
-        await ensureUser({
-          id: user.id,
-          email: user.email,
-          authMethod,
-        });
+      if (user?.email) {
+        try {
+          const type = searchParams.get("type");
+          const authMethod =
+            type === "magiclink" ? ("magic_link" as const) : undefined;
+          await ensureUser({
+            id: user.id,
+            email: user.email,
+            authMethod,
+          });
+        } catch {
+          return NextResponse.redirect(
+            `${origin}/login?error=profile_setup_failed`
+          );
+        }
       }
 
       return NextResponse.redirect(`${origin}${next}`);

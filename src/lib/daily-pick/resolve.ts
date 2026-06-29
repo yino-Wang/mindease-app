@@ -2,7 +2,10 @@
 import { fetchRssArticles } from "@/lib/daily-pick/fetch";
 import { getFallbackDailyPick } from "@/lib/daily-pick/fallback";
 import type { DailyPickArticle } from "@/lib/daily-pick/types";
-import { extractArticleFromUrl } from "@/lib/daily-pick/extract";
+import {
+  extractArticleFromUrl,
+  extractHeroImageFromUrl,
+} from "@/lib/daily-pick/extract";
 import { getEffectiveDate } from "@/lib/daily-zen/resolve";
 
 function dayOfYear(now: Date): number {
@@ -44,6 +47,23 @@ export async function getDailyPickArticle(
   return pickForDay(items, effective);
 }
 
+/** RSS metadata + original article og:image for dashboard preview (fast). */
+export async function getDailyPickArticleForDashboard(
+  now: Date = new Date()
+): Promise<DailyPickArticle> {
+  const article = await getDailyPickArticle(now);
+
+  try {
+    const heroImageUrl =
+      (await extractHeroImageFromUrl(article.referenceUrl)) ??
+      article.imageUrl ??
+      null;
+    return { ...article, heroImageUrl };
+  } catch {
+    return article;
+  }
+}
+
 export async function getDailyPickArticleWithContent(
   now: Date = new Date()
 ): Promise<DailyPickArticle> {
@@ -53,6 +73,7 @@ export async function getDailyPickArticleWithContent(
     const extracted = await extractArticleFromUrl(article.referenceUrl);
     return {
       ...article,
+      contentHtml: extracted.contentHtml,
       contentText: extracted.contentText,
       heroImageUrl: extracted.heroImageUrl ?? article.imageUrl ?? null,
     };
